@@ -29,7 +29,7 @@ var CHECKOUT = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var LOCATION = {
   X_MIN: 300,
-  X_MAX: 90,
+  X_MAX: 900,
   Y_MIN: 164,
   Y_MAX: 500
 };
