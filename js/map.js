@@ -34,28 +34,61 @@ var LOCATION = {
   Y_MAX: 500
 };
 
+/**
+ * @description возвращает случайное число от переданных min до max, всключая max
+ * @param {number} min
+ * @param {number} max
+ * @return {number} случайное число
+ */
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max - min));
 };
 
+/**
+ * @description возвращает случайный элемент массива по рандомному индексу, элементы могут повторяться
+ * @param {array} arrayOfElements
+ * @return {*} рандомный элемент массива
+ */
 var getRandomElement = function (arrayOfElements) {
   var randomIndex = getRandomNumber(0, arrayOfElements.length - 1);
   return arrayOfElements[randomIndex];
 };
 
+/**
+ * @description возвращает случайный элемент массива по рандомному индексу, при этом элементы не повторяются,
+ * что обеспечивается удалением возвращенных элементов из массива
+ * @param {array} arrayOfElements
+ * @return {*} рандомный элемент массива
+ */
 var getRandomElementNoRepeat = function (arrayOfElements) {
   var randomIndex = getRandomNumber(0, arrayOfElements.length - 1);
   return arrayOfElements.splice(randomIndex, 1);
 };
 
+/**
+ * @description возвращает массив случайной длинны исходя из переданного массива
+ * @param {array} arrayOfElements исходный массив данных
+ * @return {array} новый массив
+ */
 var getRandomArray = function (arrayOfElements) {
   return arrayOfElements.slice(getRandomNumber(1, arrayOfElements.length - 1));
 };
 
+/**
+ * @description возвращает ссылку на аватарку автора объявления,
+ * используется при создании объекта объявление @see createOneOffer
+ * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
+ * @return {string} строку с адресом картинки аватарки
+ */
 var createAvatarUrl = function (i) {
   return 'img/avatars/user0' + [i + 1] + '.png';
 };
 
+/**
+ * @description создает и возвращет объект объявление
+ * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
+ * @return {object} объект объявление
+ */
 var createOneOffer = function (i) {
   var coordinateX = getRandomNumber(LOCATION.X_MIN, LOCATION.X_MAX);
   var coordinateY = getRandomNumber(LOCATION.Y_MIN, LOCATION.Y_MAX);
@@ -83,15 +116,27 @@ var createOneOffer = function (i) {
   };
 };
 
+/* Используем функцию создания одного объявления createOneOffer
+ * OBJECT_COUNT {number} исходя из необходимого количества объявлений, генерируем объеты объявление в цикле
+ * offers {array} сохраняем в переменную offers массив объектов объявления
+ */
 var offers = [];
 for (var j = 0; j < OBJECT_COUNT; j++) {
   offers.push(createOneOffer(j));
 }
 
+/**  @description показывает блок .map--faded
+ */
 var showMap = function () {
   document.querySelector('.map').classList.remove('map--faded');
 };
 
+/**
+ * @description на основании шаблона button.map__pin создает новый DOM-элемен - пин с уникальными координатами
+ * и ссылкой на картинку аватарки автора объявления
+ * @param {object} offer принимает как параметр один объект обявление из массива объявлений @see offers
+ * @return {Node} новую DOM-ноду - пин
+ */
 var createPin = function (offer) {
   var templatePin = document.querySelector('template').content.querySelector('button.map__pin');
   var elementPin = templatePin.cloneNode(true);
@@ -103,6 +148,11 @@ var createPin = function (offer) {
   return elementPin;
 };
 
+/* используем функцию создания одного пина createPin
+ * offers {array} исходя из количества объявлений в массиве объектов объявления,
+ * генерируем нужно количество пинов и вставляем их в новый fragment
+ * отрисовываем все созданные пины в блоке .map__pins
+ */
 var pins = document.querySelector('.map__pins');
 var fragmentPins = document.createDocumentFragment();
 for (var k = 0; k < offers.length; k++) {
@@ -110,6 +160,24 @@ for (var k = 0; k < offers.length; k++) {
 }
 pins.appendChild(fragmentPins);
 
+/**
+ * @description принимает в качестве параметров:
+ * objectFeatures - массив фич объекта объявление (offerObject.offer.features), выглядит как ['wifi', 'elevator']
+ *
+ * templateFeatures - коллекция DOM-узлов - элементы <li> из списка <ul class="popup__features">,
+ * выглядит как [li.feature.feature--wifi, li.feature.feature--dishwasher]
+ *
+ * В первом цикле преобразуем элементы массива фич объекта к виду 'feature--(название фичи)', например ['feature--wifi', 'feature--elevator']
+ *
+ * Во втором цикле:
+ * метод classList для одного DOM-узла <li> возвращает массив ["feature", "feature--wifi", value: "feature feature--wifi"]
+ * Сравниваем наличие первого элемента "feature--wifi" этого DOM-узла в списке фич объекта,
+ * если такая фича есть в объекте, оставляем DOM-узел списка фич,
+ * если нет - удаляем.
+ * @param {array} objectFeatures массив фич объекта объявление
+ * @param {*} templateFeatures элементы <li> из списка <ul class="popup__features">
+ * возвращает отредактированное количетсво DOM-нод <li> - список фич
+ */
 var changeFeatures = function (objectFeatures, templateFeatures) {
   for (var f = 0; f < objectFeatures.length; f++) {
     objectFeatures[f] = 'feature--' + objectFeatures[f];
@@ -121,6 +189,10 @@ var changeFeatures = function (objectFeatures, templateFeatures) {
   }
 };
 
+/**
+ * @description на основании шаблона article.map__card отрисовывает popup с объявлением
+ * @param {object} offerObject один объект обявление из массива объявлений @see offers
+ */
 var createOfferPopup = function (offerObject) {
   var templateAd = document.querySelector('template').content.querySelector('article.map__card');
   var fragmentAd = document.createDocumentFragment();
