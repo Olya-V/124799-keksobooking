@@ -14,7 +14,7 @@ var checkin = ['12:00', '13:00', '14:00'];
 var checkout = ['12:00', '13:00', '14:00'];
 var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
-var map = document.querySelector('.map');
+var map = document.querySelector('section.map');
 var form = document.querySelector('form.notice__form');
 var fields = document.querySelectorAll('form.notice__form fieldset');
 var mapPinMainKeks = document.querySelector('.map__pin--main');
@@ -151,7 +151,9 @@ var createPin = function (offer) {
 
 /* используем функцию создания одного пина createPin
  * offers {array} исходя из количества объявлений в массиве объектов объявления,
- * генерируем нужно количество пинов и вставляем их в новый fragment
+ * генерируем нужно количество пинов,
+  * прячем с помощью класса .hidden,
+  * вставляем в новый fragment
  * отрисовываем все созданные пины в блоке .map__pins
  */
 
@@ -163,6 +165,10 @@ for (var k = 0; k < offers.length; k++) {
 }
 pinsBlock.appendChild(fragmentPins);
 
+/**
+ * @description убирает класс .hidden у пинов,
+ * вызывается в момент события mouseup на метке-кексе в обработчике @see KeksPinClickHandler
+ */
 var showPins = function () {
   var hidenPins = document.querySelectorAll('button.map__pin.hidden');
 
@@ -203,6 +209,7 @@ var changeFeatures = function (objectFeatures, templateFeatures) {
 /**
  * @description на основании шаблона article.map__card отрисовывает popup с объявлением
  * @param {object} offerObject один объект обявление из массива объявлений @see offers
+ * @return {object}
  */
 var createPopup = function (offerObject) {
   var templateAd = document.querySelector('template').content.querySelector('article.map__card');
@@ -224,17 +231,28 @@ var createPopup = function (offerObject) {
   return elementAd;
 };
 
+/* исходя из количества объектов объявлений в массиве offers
+ * генирируем нужно количество объектов popup с помощью функции createPopup,
+ * скрываем popup с помощью класса hidden,
+ * добавляем в массив popups
+ * и отрисовываем все popup в блок .map
+ */
 var popups = [];
 var fragmentAd = document.createDocumentFragment();
 var mapFilters = document.querySelector('.map__filters-container');
+
 for (var n = 0; n < offers.length; n++) {
   var newPopup = createPopup(offers[n]);
   newPopup.classList.add('hidden');
   popups.push(newPopup);
   fragmentAd.appendChild(newPopup);
 }
+
 map.insertBefore(fragmentAd, mapFilters);
 
+/**
+ * @description затемняет блок .map
+ */
 var fadeMap = function () {
   map.classList.add('map--faded');
 };
@@ -245,49 +263,57 @@ var showMap = function () {
   map.classList.remove('map--faded');
 };
 
+/**
+ * @description делает поля формы c классом notice__form объединенные в fieldset недоступными
+ */
 var disableFields = function () {
   for (var i = 0; i < fields.length; i++) {
     fields[i].setAttribute('disabled', 'disabled');
   }
 };
 
+/**
+ * @description делает форму c классом notice__form неактивной
+ */
 var disableForm = function () {
   form.classList.add('notice__form--disabled');
   disableFields();
 };
 
+/**
+ * @description делает поля формы c классом notice__form объединенные в fieldset доступными
+ */
 var activateFields = function () {
   for (var i = 0; i < fields.length; i++) {
     fields[i].removeAttribute('disabled');
   }
 };
 
+/**
+ * @description делает форму c классом notice__form активной
+ */
 var activateForm = function () {
   form.classList.remove('notice__form--disabled');
   activateFields();
 };
 
+/**
+ * @description обработчик события клик по метке с кексом:
+ * Показывает карту (до нажатия карта затемнена),
+ * Атиквирует форму c классом notice__form и поля формы (до нажатия форма неактивна),
+ * Показывает пины других схожих объявлений (до нажатия пины скрыты)
+ * @constructor
+ */
 var KeksPinClickHandler = function () {
   showMap();
   activateForm();
   showPins();
 };
 
-/* В момент открытия, страница должна находиться в следующем состоянии:
-карта затемнена (добавлен класс map--faded)
-и форма неактивна (добавлен класс notice__form--disabled
-и все поля формы недоступны, disabled) */
-
-fadeMap();
-disableForm();
-
-/* После того, как на блоке map__pin--main произойдет событие mouseup, форма и карта должны активироваться:
-У карты убрать класс map--faded
-Показать на карте метки похожих объявлений, созданные в задании к прошлому разделу
-У формы убрать класс notice__form--disabled и сделать все поля формы активными */
-
-mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
-
+/**
+ * @description деактивирует пины, которые были активны
+ * Используется в момент клика/нажатия Enter по другому пину
+ */
 var disablePin = function () {
   var activePin = document.querySelector('.map__pin--active');
   if (activePin) {
@@ -295,6 +321,14 @@ var disablePin = function () {
   }
 };
 
+/**
+ * @description активирует пин при нажатии (пин подсвечивается)
+ * Если клик произошел по картинке аватарки, тогда родителю - пину (button) присваивается класс map__pin--active.
+ * Если клик произошел по "ножке пина - псевдоэлементу", тогда evt.target = button присваивается класс map__pin--active,
+ * Аналогично второму варианту активируется пин при нажати Enter, тк evt.target в этом случае тоже button.
+ * @param {object} evt
+ * @return {object} активный пин (button), по которому кликнули/нажали
+ */
 var activatePin = function (evt) {
   var activePin = null;
   if (evt.target.tagName === 'IMG') {
@@ -308,81 +342,140 @@ var activatePin = function (evt) {
   }
 };
 
-var findPopupIndex = function (evt) {
-  var activePin = activatePin(evt);
-  var activePinAvatarURL = activePin.innerHTML.slice(10, 32);
-
-  var urls = []
+/**
+ * @description создает массив с адресом аватарок объектов объявления.
+ * Используется как связь между активным объектом пин и объектом popup,
+ * который надо показать при нажатии на пин в функции findPopupIndex
+ * @return {Array} массив url аватарок
+ */
+var createArrayOfAvatarsUrl = function () {
+  var urls = [];
   for (var c = 0; c < offers.length; c++) {
     urls.push(offers[c].author.avatar);
   }
-  return urls.indexOf(activePinAvatarURL);
+  return urls;
+}
+
+/**
+ * @description после активации пина, находит индекс popup, который надо показать.
+ * Для этого из активного пина вычленяет адрес аватарки,
+ * находит индекс этой аватарки в массиве аватарок.
+ * Испольуется в функции openPopup,
+ * что бы показать нужный popup с таким же индексом как и у активного пина
+ * @param {object} evt
+ * @return {number} возвращает число - индекс url аватарки = индексу popup, который нужно показать
+ */
+var findPopupIndex = function (evt) {
+  var activePin = activatePin(evt);
+  var activePinAvatarURL = activePin.innerHTML.slice(10, 32);
+  var urlsArray = createArrayOfAvatarsUrl();
+  return urlsArray.indexOf(activePinAvatarURL);
 };
 
+/**
+ * @description показывает popup
+ * @param {object} evt
+ */
 var openPopup = function (evt) {
   popups[findPopupIndex(evt)].classList.remove('hidden');
 };
 
+/**
+ * @description после отображения popup устанавливает фокус на кнопке закрытия popup
+ */
 var setFocus = function () {
   var popup = document.querySelector('.popup:not(.hidden)');
   var closeButton = popup.children[1];
   closeButton.focus();
-}
-
-var pinClickHandler = function (evt) {
-  disablePin();
-  /* activatePin(evt); */
-  openPopup(evt);
-  setFocus();
 };
 
-/* При нажатии на любой из элементов .map__pin
- ему должен добавляться класс map__pin--active
-  и должен показываться элемент .popup
-Если до этого у другого элемента существовал класс pin--active,
-то у этого элемента класс нужно убрать */
-pinsBlock.addEventListener('click', function (evt) {
-  if (evt.target.tagName === 'IMG' && evt.path[1].classList[0] === 'map__pin' && evt.path[1].classList[1] !== 'map__pin--main') {
-    pinClickHandler(evt);
-  }
-  if (evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main') {
-    pinClickHandler(evt);
-  }
-});
+/**
+ * @description обработчик клика по пину.
+ * Вызывается на блоке родителе div.map__pin -  контейнере пинов, тк внутри этого блока несколько пинов.
+ * Если клик произошел по картинке аватарки (img) или по ее "ножке" (button)
+ * и при этом класс button это map__pin, но НЕ  map__pin--main (основная метка)
+ * тогда:
+ * - деактивируем пины, которые нажали ранее
+ * - показываем popup (активируем пин, нажатый сейчас, находим индекс автивного пина и по нему нужный popup и показываем popup)
+ * - ставим фокус на кнопке закрытия popup
+ * @param {object} evt
+ */
+var pinClickHandler = function (evt) {
+  var pressedImg = evt.target.tagName === 'IMG' && evt.path[1].classList[0] === 'map__pin' && evt.path[1].classList[1] !== 'map__pin--main';
+  var pressedButton = evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main';
 
-pinsBlock.addEventListener('keydown', function (evt) {
-  console.log(0);
-  if (evt.keyCode === ENTER_KEYCODE && evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main') {
+  if (pressedImg || pressedButton) {
+    disablePin();
+    openPopup(evt);
+    setFocus();
+    console.log('открыли: клик, стадия: ' + evt.eventPhase);
+  }
+};
+
+/**
+ * @description обработчик нажатия кнопки Enter по пину.
+ * Вызывается на блоке родителе div.map__pin -  контейнере пинов, тк внутри этого блока несколько пинов.
+ * Если нажатая кнопка это Enter и она нажата на пине (button) с классом map__pin, но НЕ классом map__pin--main (основная метка),
+ * тогда:
+ * - деактивируем пины, которые нажали ранее
+ * - показываем popup (активируем пин, нажатый сейчас, находим индекс автивного пина и по нему нужный popup и показываем popup)
+ * - ставим фокус на кнопке закрытия popup
+ * @param {object} evt
+ */
+var pinEnterKeydownHandler = function (evt) {
+  var pressedPin = evt.keyCode === ENTER_KEYCODE && evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main';
+
+  if (pressedPin) {
+    disablePin();
     console.log(1);
     openPopup(evt);
     console.log(2);
+    setFocus();
+    console.log('открыли: Enter, стадия:' + evt.eventPhase);
   }
-});
+};
 
-/* При нажатии на элемент .popup__close
-карточка объявления должна скрываться.
-При этом должен деактивироваться элемент .map__pin, который был помечен как активный */
-
+/**
+ * @description обработчик события клик по кнопке закрытия открытого popup с обяъвлением.
+ * Вызывается на
+ * @param {object} evt
+ */
 var closeButtonClickHandler = function (evt) {
   if (evt.target.classList[0] === 'popup__close') {
     evt.target.parentNode.classList.add('hidden');
     disablePin();
+    console.log('закрыли: клик, стадия:' + evt.eventPhase);
   }
 };
 
-map.addEventListener('click', closeButtonClickHandler);
-
-map.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    closeButtonClickHandler(evt);
-    console.log(4);
+/**
+ *
+ * @param {object} evt
+ */
+var closeButtonKeydownHandler = function (evt) {
+  if (evt.target.classList[0] === 'popup__close' && evt.keyCode === ENTER_KEYCODE) {
+    evt.target.parentNode.classList.add('hidden');
+    disablePin();
+    console.log('закрыли: Enter, стадия: ' + evt.eventPhase);
   }
-}), true;
-
-map.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     var popup = document.querySelector('.popup:not(.hidden)');
     popup.classList.add('hidden');
     disablePin();
+    console.log('закрыли: Esc, стадия: ' + evt.eventPhase);
   }
-});
+};
+
+
+mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
+
+pinsBlock.addEventListener('click', pinClickHandler);
+
+pinsBlock.addEventListener('keydown', pinEnterKeydownHandler);
+
+document.addEventListener('click', closeButtonClickHandler);
+
+document.addEventListener('keydown', closeButtonKeydownHandler);
+
+fadeMap();
+disableForm();
