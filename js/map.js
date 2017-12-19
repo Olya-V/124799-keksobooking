@@ -14,6 +14,12 @@ var checkin = ['12:00', '13:00', '14:00'];
 var checkout = ['12:00', '13:00', '14:00'];
 var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
+var map = document.querySelector('.map');
+var form = document.querySelector('form.notice__form');
+var fields = document.querySelectorAll('form.notice__form fieldset');
+var mapPinMainKeks = document.querySelector('.map__pin--main');
+var pinsBlock = document.querySelector('div.map__pins');
+
 var OBJECT_COUNT = 8;
 var PRICE = {
   MIN: 1000,
@@ -33,7 +39,8 @@ var LOCATION = {
   Y_MIN: 164,
   Y_MAX: 500
 };
-
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 /**
  * @description возвращает случайное число от переданных min до max, всключая max
  * @param {number} min
@@ -89,7 +96,7 @@ var createAvatarUrl = function (i) {
  * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
  * @return {object} объект объявление
  */
-var createOneOffer = function (i) {
+var createOffer = function (i) {
   var coordinateX = getRandomNumber(LOCATION.X_MIN, LOCATION.X_MAX);
   var coordinateY = getRandomNumber(LOCATION.Y_MIN, LOCATION.Y_MAX);
   return {
@@ -122,14 +129,8 @@ var createOneOffer = function (i) {
  */
 var offers = [];
 for (var j = 0; j < OBJECT_COUNT; j++) {
-  offers.push(createOneOffer(j));
+  offers.push(createOffer(j));
 }
-
-/**  @description показывает блок .map--faded
- */
-var showMap = function () {
-  document.querySelector('.map').classList.remove('map--faded');
-};
 
 /**
  * @description на основании шаблона button.map__pin создает новый DOM-элемен - пин с уникальными координатами
@@ -153,12 +154,22 @@ var createPin = function (offer) {
  * генерируем нужно количество пинов и вставляем их в новый fragment
  * отрисовываем все созданные пины в блоке .map__pins
  */
-var pins = document.querySelector('.map__pins');
+
 var fragmentPins = document.createDocumentFragment();
 for (var k = 0; k < offers.length; k++) {
-  fragmentPins.appendChild(createPin(offers[k]));
+  var newPin = createPin(offers[k]);
+  newPin.classList.add('hidden');
+  fragmentPins.appendChild(newPin);
 }
-pins.appendChild(fragmentPins);
+pinsBlock.appendChild(fragmentPins);
+
+var showPins = function () {
+  var hidenPins = document.querySelectorAll('button.map__pin.hidden');
+
+  for (var g = 0; g < hidenPins.length; g++) {
+    hidenPins[g].classList.remove('hidden');
+  }
+};
 
 /**
  * @description принимает в качестве параметров:
@@ -193,11 +204,8 @@ var changeFeatures = function (objectFeatures, templateFeatures) {
  * @description на основании шаблона article.map__card отрисовывает popup с объявлением
  * @param {object} offerObject один объект обявление из массива объявлений @see offers
  */
-var createOfferPopup = function (offerObject) {
+var createPopup = function (offerObject) {
   var templateAd = document.querySelector('template').content.querySelector('article.map__card');
-  var fragmentAd = document.createDocumentFragment();
-  var map = document.querySelector('.map');
-  var mapFilters = document.querySelector('.map__filters-container');
   var elementAd = templateAd.cloneNode(true);
 
   elementAd.querySelector('img').src = offerObject.author.avatar;
@@ -208,13 +216,173 @@ var createOfferPopup = function (offerObject) {
   elementAd.querySelector('p:nth-of-type(3)').innerHTML = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
   elementAd.querySelector('p:nth-of-type(4)').innerHTML = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
   elementAd.querySelector('p:nth-of-type(5)').innerHTML = offerObject.offer.description;
+  elementAd.classList.add('hidden');
 
   var templateFeaturesList = elementAd.querySelectorAll('.feature');
   var featuresList = offerObject.offer.features;
   changeFeatures(featuresList, templateFeaturesList);
-  fragmentAd.appendChild(elementAd);
-  map.insertBefore(fragmentAd, mapFilters);
+  return elementAd;
 };
 
-showMap();
-createOfferPopup(offers[0]);
+var popups = [];
+var fragmentAd = document.createDocumentFragment();
+var mapFilters = document.querySelector('.map__filters-container');
+for (var n = 0; n < offers.length; n++) {
+  var newPopup = createPopup(offers[n]);
+  newPopup.classList.add('hidden');
+  popups.push(newPopup);
+  fragmentAd.appendChild(newPopup);
+}
+map.insertBefore(fragmentAd, mapFilters);
+
+var fadeMap = function () {
+  map.classList.add('map--faded');
+};
+
+/**  @description показывает блок .map--faded
+ */
+var showMap = function () {
+  map.classList.remove('map--faded');
+};
+
+var disableFields = function () {
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var disableForm = function () {
+  form.classList.add('notice__form--disabled');
+  disableFields();
+};
+
+var activateFields = function () {
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].removeAttribute('disabled');
+  }
+};
+
+var activateForm = function () {
+  form.classList.remove('notice__form--disabled');
+  activateFields();
+};
+
+var KeksPinClickHandler = function () {
+  showMap();
+  activateForm();
+  showPins();
+};
+
+/* В момент открытия, страница должна находиться в следующем состоянии:
+карта затемнена (добавлен класс map--faded)
+и форма неактивна (добавлен класс notice__form--disabled
+и все поля формы недоступны, disabled) */
+
+fadeMap();
+disableForm();
+
+/* После того, как на блоке map__pin--main произойдет событие mouseup, форма и карта должны активироваться:
+У карты убрать класс map--faded
+Показать на карте метки похожих объявлений, созданные в задании к прошлому разделу
+У формы убрать класс notice__form--disabled и сделать все поля формы активными */
+
+mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
+
+var disablePin = function () {
+  var activePin = document.querySelector('.map__pin--active');
+  if (activePin) {
+    activePin.classList.remove('map__pin--active');
+  }
+};
+
+var activatePin = function (evt) {
+  var activePin = null;
+  if (evt.target.tagName === 'IMG') {
+    activePin = evt.target.parentNode;
+    activePin.classList.add('map__pin--active');
+    return activePin;
+  } else {
+    activePin = evt.target;
+    activePin.classList.add('map__pin--active');
+    return activePin;
+  }
+};
+
+var findPopupIndex = function (evt) {
+  var activePin = activatePin(evt);
+  var activePinAvatarURL = activePin.innerHTML.slice(10, 32);
+
+  var urls = []
+  for (var c = 0; c < offers.length; c++) {
+    urls.push(offers[c].author.avatar);
+  }
+  return urls.indexOf(activePinAvatarURL);
+};
+
+var openPopup = function (evt) {
+  popups[findPopupIndex(evt)].classList.remove('hidden');
+};
+
+var setFocus = function () {
+  var popup = document.querySelector('.popup:not(.hidden)');
+  var closeButton = popup.children[1];
+  closeButton.focus();
+}
+
+var pinClickHandler = function (evt) {
+  disablePin();
+  /* activatePin(evt); */
+  openPopup(evt);
+  setFocus();
+};
+
+/* При нажатии на любой из элементов .map__pin
+ ему должен добавляться класс map__pin--active
+  и должен показываться элемент .popup
+Если до этого у другого элемента существовал класс pin--active,
+то у этого элемента класс нужно убрать */
+pinsBlock.addEventListener('click', function (evt) {
+  if (evt.target.tagName === 'IMG' && evt.path[1].classList[0] === 'map__pin' && evt.path[1].classList[1] !== 'map__pin--main') {
+    pinClickHandler(evt);
+  }
+  if (evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main') {
+    pinClickHandler(evt);
+  }
+});
+
+pinsBlock.addEventListener('keydown', function (evt) {
+  console.log(0);
+  if (evt.keyCode === ENTER_KEYCODE && evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main') {
+    console.log(1);
+    openPopup(evt);
+    console.log(2);
+  }
+});
+
+/* При нажатии на элемент .popup__close
+карточка объявления должна скрываться.
+При этом должен деактивироваться элемент .map__pin, который был помечен как активный */
+
+var closeButtonClickHandler = function (evt) {
+  if (evt.target.classList[0] === 'popup__close') {
+    evt.target.parentNode.classList.add('hidden');
+    disablePin();
+  }
+};
+
+map.addEventListener('click', closeButtonClickHandler);
+
+map.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeButtonClickHandler(evt);
+    console.log(4);
+  }
+}), true;
+
+map.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    var popup = document.querySelector('.popup:not(.hidden)');
+    popup.classList.add('hidden');
+    disablePin();
+  }
+});
