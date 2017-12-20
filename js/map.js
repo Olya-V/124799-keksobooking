@@ -238,16 +238,9 @@ var disablePin = function () {
  * @return {object} активный пин (button), по которому кликнули/нажали
  */
 var activatePin = function (evt) {
-  var activePin = null;
-  if (evt.target.tagName === 'IMG') {
-    activePin = evt.target.parentNode;
-    activePin.classList.add('map__pin--active');
-    return activePin.dataset.id;
-  } else {
-    activePin = evt.target;
-    activePin.classList.add('map__pin--active');
-    return activePin.dataset.id;
-  }
+  var activePin = evt.currentTarget;
+  activePin.classList.add('map__pin--active');
+  return activePin.dataset.id;
 };
 
 /**
