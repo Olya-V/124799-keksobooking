@@ -40,7 +40,7 @@ var LOCATION = {
   Y_MAX: 500
 };
 var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
+
 /**
  * @description возвращает случайное число от переданных min до max, всключая max
  * @param {number} min
@@ -161,6 +161,7 @@ var fragmentPins = document.createDocumentFragment();
 for (var k = 0; k < offers.length; k++) {
   var newPin = createPin(offers[k]);
   newPin.classList.add('hidden');
+  newPin.setAttribute('data-id', k);
   fragmentPins.appendChild(newPin);
 }
 pinsBlock.appendChild(fragmentPins);
@@ -214,6 +215,8 @@ var changeFeatures = function (objectFeatures, templateFeatures) {
 var createPopup = function (offerObject) {
   var templateAd = document.querySelector('template').content.querySelector('article.map__card');
   var elementAd = templateAd.cloneNode(true);
+  var fragmentAd = document.createDocumentFragment();
+  var mapFilters = document.querySelector('.map__filters-container')
 
   elementAd.querySelector('img').src = offerObject.author.avatar;
   elementAd.querySelector('h3').innerHTML = offerObject.offer.title;
@@ -223,32 +226,13 @@ var createPopup = function (offerObject) {
   elementAd.querySelector('p:nth-of-type(3)').innerHTML = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
   elementAd.querySelector('p:nth-of-type(4)').innerHTML = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
   elementAd.querySelector('p:nth-of-type(5)').innerHTML = offerObject.offer.description;
-  elementAd.classList.add('hidden');
 
   var templateFeaturesList = elementAd.querySelectorAll('.feature');
   var featuresList = offerObject.offer.features;
   changeFeatures(featuresList, templateFeaturesList);
-  return elementAd;
+  fragmentAd.appendChild(elementAd);
+  map.insertBefore(fragmentAd, mapFilters);
 };
-
-/* исходя из количества объектов объявлений в массиве offers
- * генирируем нужно количество объектов popup с помощью функции createPopup,
- * скрываем popup с помощью класса hidden,
- * добавляем в массив popups
- * и отрисовываем все popup в блок .map
- */
-var popups = [];
-var fragmentAd = document.createDocumentFragment();
-var mapFilters = document.querySelector('.map__filters-container');
-
-for (var n = 0; n < offers.length; n++) {
-  var newPopup = createPopup(offers[n]);
-  newPopup.classList.add('hidden');
-  popups.push(newPopup);
-  fragmentAd.appendChild(newPopup);
-}
-
-map.insertBefore(fragmentAd, mapFilters);
 
 /**
  * @description затемняет блок .map
@@ -334,59 +318,29 @@ var activatePin = function (evt) {
   if (evt.target.tagName === 'IMG') {
     activePin = evt.target.parentNode;
     activePin.classList.add('map__pin--active');
-    return activePin;
+    return activePin.dataset.id;
   } else {
     activePin = evt.target;
     activePin.classList.add('map__pin--active');
-    return activePin;
+    return activePin.dataset.id;
   }
-};
-
-/**
- * @description создает массив с адресом аватарок объектов объявления.
- * Используется как связь между активным объектом пин и объектом popup,
- * который надо показать при нажатии на пин в функции findPopupIndex
- * @return {Array} массив url аватарок
- */
-var createArrayOfAvatarsUrl = function () {
-  var urls = [];
-  for (var c = 0; c < offers.length; c++) {
-    urls.push(offers[c].author.avatar);
-  }
-  return urls;
-}
-
-/**
- * @description после активации пина, находит индекс popup, который надо показать.
- * Для этого из активного пина вычленяет адрес аватарки,
- * находит индекс этой аватарки в массиве аватарок.
- * Испольуется в функции openPopup,
- * что бы показать нужный popup с таким же индексом как и у активного пина
- * @param {object} evt
- * @return {number} возвращает число - индекс url аватарки = индексу popup, который нужно показать
- */
-var findPopupIndex = function (evt) {
-  var activePin = activatePin(evt);
-  var activePinAvatarURL = activePin.innerHTML.slice(10, 32);
-  var urlsArray = createArrayOfAvatarsUrl();
-  return urlsArray.indexOf(activePinAvatarURL);
-};
-
-/**
- * @description показывает popup
- * @param {object} evt
- */
-var openPopup = function (evt) {
-  popups[findPopupIndex(evt)].classList.remove('hidden');
 };
 
 /**
  * @description после отображения popup устанавливает фокус на кнопке закрытия popup
  */
 var setFocus = function () {
-  var popup = document.querySelector('.popup:not(.hidden)');
+  var popup = document.querySelector('.popup');
   var closeButton = popup.children[1];
   closeButton.focus();
+};
+
+var deleteOpenedPopup = function () {
+  var openedPopup = document.querySelector('.popup');
+
+  if (openedPopup) {
+    map.removeChild(openedPopup);
+  }
 };
 
 /**
@@ -406,32 +360,10 @@ var pinClickHandler = function (evt) {
 
   if (pressedImg || pressedButton) {
     disablePin();
-    openPopup(evt);
+    deleteOpenedPopup();
+    createPopup(offers[activatePin(evt)]);
     setFocus();
     console.log('открыли: клик, стадия: ' + evt.eventPhase);
-  }
-};
-
-/**
- * @description обработчик нажатия кнопки Enter по пину.
- * Вызывается на блоке родителе div.map__pin -  контейнере пинов, тк внутри этого блока несколько пинов.
- * Если нажатая кнопка это Enter и она нажата на пине (button) с классом map__pin, но НЕ классом map__pin--main (основная метка),
- * тогда:
- * - деактивируем пины, которые нажали ранее
- * - показываем popup (активируем пин, нажатый сейчас, находим индекс автивного пина и по нему нужный popup и показываем popup)
- * - ставим фокус на кнопке закрытия popup
- * @param {object} evt
- */
-var pinEnterKeydownHandler = function (evt) {
-  var pressedPin = evt.keyCode === ENTER_KEYCODE && evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main';
-
-  if (pressedPin) {
-    disablePin();
-    console.log(1);
-    openPopup(evt);
-    console.log(2);
-    setFocus();
-    console.log('открыли: Enter, стадия:' + evt.eventPhase);
   }
 };
 
@@ -452,12 +384,7 @@ var closeButtonClickHandler = function (evt) {
  *
  * @param {object} evt
  */
-var closeButtonKeydownHandler = function (evt) {
-  if (evt.target.classList[0] === 'popup__close' && evt.keyCode === ENTER_KEYCODE) {
-    evt.target.parentNode.classList.add('hidden');
-    disablePin();
-    console.log('закрыли: Enter, стадия: ' + evt.eventPhase);
-  }
+var popupEscKeydownHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     var popup = document.querySelector('.popup:not(.hidden)');
     popup.classList.add('hidden');
@@ -466,16 +393,13 @@ var closeButtonKeydownHandler = function (evt) {
   }
 };
 
-
 mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
 
 pinsBlock.addEventListener('click', pinClickHandler);
 
-pinsBlock.addEventListener('keydown', pinEnterKeydownHandler);
-
 document.addEventListener('click', closeButtonClickHandler);
 
-document.addEventListener('keydown', closeButtonKeydownHandler);
+document.addEventListener('keydown', popupEscKeydownHandler);
 
 fadeMap();
 disableForm();
