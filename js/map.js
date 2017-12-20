@@ -42,7 +42,7 @@ var LOCATION = {
 var ESC_KEYCODE = 27;
 
 /**
- * @description возвращает случайное число от переданных min до max, всключая max
+ * @description возвращает случайное число от min до max, всключая max
  * @param {number} min
  * @param {number} max
  * @return {number} случайное число
@@ -62,8 +62,7 @@ var getRandomElement = function (arrayOfElements) {
 };
 
 /**
- * @description возвращает случайный элемент массива по рандомному индексу, при этом элементы не повторяются,
- * что обеспечивается удалением возвращенных элементов из массива
+ * @description возвращает случайный элемент массива по рандомному индексу, элементы не повторяются
  * @param {array} arrayOfElements
  * @return {*} рандомный элемент массива
  */
@@ -82,8 +81,7 @@ var getRandomArray = function (arrayOfElements) {
 };
 
 /**
- * @description возвращает ссылку на аватарку автора объявления,
- * используется при создании объекта объявление @see createOneOffer
+ * @description возвращает ссылку на аватарку автора объявления
  * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
  * @return {string} строку с адресом картинки аватарки
  */
@@ -92,7 +90,7 @@ var createAvatarUrl = function (i) {
 };
 
 /**
- * @description создает и возвращет объект объявление
+ * @description создает объект объявление
  * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
  * @return {object} объект объявление
  */
@@ -123,9 +121,8 @@ var createOffer = function (i) {
   };
 };
 
-/* Используем функцию создания одного объявления createOneOffer
- * OBJECT_COUNT {number} исходя из необходимого количества объявлений, генерируем объеты объявление в цикле
- * offers {array} сохраняем в переменную offers массив объектов объявления
+/* offers {array} массив с объектами обяъвлений
+ * OBJECT_COUNT {number} количество объявлений
  */
 var offers = [];
 for (var j = 0; j < OBJECT_COUNT; j++) {
@@ -133,68 +130,9 @@ for (var j = 0; j < OBJECT_COUNT; j++) {
 }
 
 /**
- * @description на основании шаблона button.map__pin создает новый DOM-элемен - пин с уникальными координатами
- * и ссылкой на картинку аватарки автора объявления
- * @param {object} offer принимает как параметр один объект обявление из массива объявлений @see offers
- * @return {Node} новую DOM-ноду - пин
- */
-var createPin = function (offer) {
-  var templatePin = document.querySelector('template').content.querySelector('button.map__pin');
-  var elementPin = templatePin.cloneNode(true);
-
-  elementPin.style.left = offer.location.x + 'px';
-  elementPin.style.top = offer.location.y + 'px';
-  elementPin.querySelector('img').src = offer.author.avatar;
-
-  return elementPin;
-};
-
-/* используем функцию создания одного пина createPin
- * offers {array} исходя из количества объявлений в массиве объектов объявления,
- * генерируем нужно количество пинов,
-  * прячем с помощью класса .hidden,
-  * вставляем в новый fragment
- * отрисовываем все созданные пины в блоке .map__pins
- */
-
-var fragmentPins = document.createDocumentFragment();
-for (var k = 0; k < offers.length; k++) {
-  var newPin = createPin(offers[k]);
-  newPin.classList.add('hidden');
-  newPin.setAttribute('data-id', k);
-  fragmentPins.appendChild(newPin);
-}
-pinsBlock.appendChild(fragmentPins);
-
-/**
- * @description убирает класс .hidden у пинов,
- * вызывается в момент события mouseup на метке-кексе в обработчике @see KeksPinClickHandler
- */
-var showPins = function () {
-  var hidenPins = document.querySelectorAll('button.map__pin.hidden');
-
-  for (var g = 0; g < hidenPins.length; g++) {
-    hidenPins[g].classList.remove('hidden');
-  }
-};
-
-/**
- * @description принимает в качестве параметров:
- * objectFeatures - массив фич объекта объявление (offerObject.offer.features), выглядит как ['wifi', 'elevator']
- *
- * templateFeatures - коллекция DOM-узлов - элементы <li> из списка <ul class="popup__features">,
- * выглядит как [li.feature.feature--wifi, li.feature.feature--dishwasher]
- *
- * В первом цикле преобразуем элементы массива фич объекта к виду 'feature--(название фичи)', например ['feature--wifi', 'feature--elevator']
- *
- * Во втором цикле:
- * метод classList для одного DOM-узла <li> возвращает массив ["feature", "feature--wifi", value: "feature feature--wifi"]
- * Сравниваем наличие первого элемента "feature--wifi" этого DOM-узла в списке фич объекта,
- * если такая фича есть в объекте, оставляем DOM-узел списка фич,
- * если нет - удаляем.
+ * @description из списка всех возможных фич оставляет только те, которые есть в объекте объявление.
  * @param {array} objectFeatures массив фич объекта объявление
- * @param {*} templateFeatures элементы <li> из списка <ul class="popup__features">
- * возвращает отредактированное количетсво DOM-нод <li> - список фич
+ * @param {*} templateFeatures коллекция DOM-узлов - элементы <li> из списка <ul class="popup__features">
  */
 var changeFeatures = function (objectFeatures, templateFeatures) {
   for (var f = 0; f < objectFeatures.length; f++) {
@@ -208,16 +146,14 @@ var changeFeatures = function (objectFeatures, templateFeatures) {
 };
 
 /**
- * @description на основании шаблона article.map__card отрисовывает popup с объявлением
- * @param {object} offerObject один объект обявление из массива объявлений @see offers
- * @return {object}
+ * @description перед .map__filters-container отрисовывает новый DOM-элемен popup
+ * @param {object} offerObject объект обявление -  один элемент из массива объявлений @see offers
  */
 var createPopup = function (offerObject) {
   var templateAd = document.querySelector('template').content.querySelector('article.map__card');
   var elementAd = templateAd.cloneNode(true);
   var fragmentAd = document.createDocumentFragment();
-  var mapFilters = document.querySelector('.map__filters-container')
-
+  var mapFilters = document.querySelector('.map__filters-container');
   elementAd.querySelector('img').src = offerObject.author.avatar;
   elementAd.querySelector('h3').innerHTML = offerObject.offer.title;
   elementAd.querySelector('small').innerHTML = offerObject.offer.address;
@@ -232,6 +168,86 @@ var createPopup = function (offerObject) {
   changeFeatures(featuresList, templateFeaturesList);
   fragmentAd.appendChild(elementAd);
   map.insertBefore(fragmentAd, mapFilters);
+};
+
+/**
+ * @description создает DOM-элемен - пин
+ * @param {object} offer объект обявление - элемент из массива объявлений @see offers
+ * @return {Node} новую DOM-ноду - пин
+ */
+var createPin = function (offer) {
+  var templatePin = document.querySelector('template').content.querySelector('button.map__pin');
+  var elementPin = templatePin.cloneNode(true);
+
+  elementPin.style.left = offer.location.x + 'px';
+  elementPin.style.top = offer.location.y + 'px';
+  elementPin.querySelector('img').src = offer.author.avatar;
+
+  return elementPin;
+};
+
+/**
+ * @description обработчик клика по пину.
+ * @param {object} evt
+ */
+var pinClickHandler = function (evt) {
+  disablePin();
+  deleteOpenedPopup();
+  createPopup(offers[activatePin(evt)]);
+  setFocus();
+};
+
+/**
+ * создает пины на основе объекта объявление - элемент массива @see offers во fragment,
+ * пины отрисовываются в блоке .map__pins
+ */
+var fragmentPins = document.createDocumentFragment();
+for (var k = 0; k < offers.length; k++) {
+  var newPin = createPin(offers[k]);
+  newPin.classList.add('hidden');
+  newPin.setAttribute('data-id', k);
+  newPin.addEventListener('click', pinClickHandler);
+  fragmentPins.appendChild(newPin);
+}
+pinsBlock.appendChild(fragmentPins);
+
+/**
+ * @description убирает класс .hidden у пинов,
+ */
+var showPins = function () {
+  var hidenPins = document.querySelectorAll('button.map__pin.hidden');
+
+  for (var g = 0; g < hidenPins.length; g++) {
+    hidenPins[g].classList.remove('hidden');
+  }
+};
+
+/**
+ * @description деактивирует пины, которые были активны (убирает подсветку)
+ */
+var disablePin = function () {
+  var activePin = document.querySelector('.map__pin--active');
+  if (activePin) {
+    activePin.classList.remove('map__pin--active');
+  }
+};
+
+/**
+ * @description активирует пин при нажатии (пин подсвечивается)
+ * @param {object} evt
+ * @return {object} активный пин (button), по которому кликнули/нажали
+ */
+var activatePin = function (evt) {
+  var activePin = null;
+  if (evt.target.tagName === 'IMG') {
+    activePin = evt.target.parentNode;
+    activePin.classList.add('map__pin--active');
+    return activePin.dataset.id;
+  } else {
+    activePin = evt.target;
+    activePin.classList.add('map__pin--active');
+    return activePin.dataset.id;
+  }
 };
 
 /**
@@ -282,10 +298,7 @@ var activateForm = function () {
 };
 
 /**
- * @description обработчик события клик по метке с кексом:
- * Показывает карту (до нажатия карта затемнена),
- * Атиквирует форму c классом notice__form и поля формы (до нажатия форма неактивна),
- * Показывает пины других схожих объявлений (до нажатия пины скрыты)
+ * @description обработчик события клик по метке с кексом
  * @constructor
  */
 var KeksPinClickHandler = function () {
@@ -295,39 +308,7 @@ var KeksPinClickHandler = function () {
 };
 
 /**
- * @description деактивирует пины, которые были активны
- * Используется в момент клика/нажатия Enter по другому пину
- */
-var disablePin = function () {
-  var activePin = document.querySelector('.map__pin--active');
-  if (activePin) {
-    activePin.classList.remove('map__pin--active');
-  }
-};
-
-/**
- * @description активирует пин при нажатии (пин подсвечивается)
- * Если клик произошел по картинке аватарки, тогда родителю - пину (button) присваивается класс map__pin--active.
- * Если клик произошел по "ножке пина - псевдоэлементу", тогда evt.target = button присваивается класс map__pin--active,
- * Аналогично второму варианту активируется пин при нажати Enter, тк evt.target в этом случае тоже button.
- * @param {object} evt
- * @return {object} активный пин (button), по которому кликнули/нажали
- */
-var activatePin = function (evt) {
-  var activePin = null;
-  if (evt.target.tagName === 'IMG') {
-    activePin = evt.target.parentNode;
-    activePin.classList.add('map__pin--active');
-    return activePin.dataset.id;
-  } else {
-    activePin = evt.target;
-    activePin.classList.add('map__pin--active');
-    return activePin.dataset.id;
-  }
-};
-
-/**
- * @description после отображения popup устанавливает фокус на кнопке закрытия popup
+ * @description устанавливает фокус на кнопке закрытия popup
  */
 var setFocus = function () {
   var popup = document.querySelector('.popup');
@@ -335,6 +316,9 @@ var setFocus = function () {
   closeButton.focus();
 };
 
+/**
+ * @description удаляет открые ранее popup
+ */
 var deleteOpenedPopup = function () {
   var openedPopup = document.querySelector('.popup');
 
@@ -343,45 +327,20 @@ var deleteOpenedPopup = function () {
   }
 };
 
-/**
- * @description обработчик клика по пину.
- * Вызывается на блоке родителе div.map__pin -  контейнере пинов, тк внутри этого блока несколько пинов.
- * Если клик произошел по картинке аватарки (img) или по ее "ножке" (button)
- * и при этом класс button это map__pin, но НЕ  map__pin--main (основная метка)
- * тогда:
- * - деактивируем пины, которые нажали ранее
- * - показываем popup (активируем пин, нажатый сейчас, находим индекс автивного пина и по нему нужный popup и показываем popup)
- * - ставим фокус на кнопке закрытия popup
- * @param {object} evt
- */
-var pinClickHandler = function (evt) {
-  var pressedImg = evt.target.tagName === 'IMG' && evt.path[1].classList[0] === 'map__pin' && evt.path[1].classList[1] !== 'map__pin--main';
-  var pressedButton = evt.target.tagName === 'BUTTON' && evt.target.classList[0] === 'map__pin' && evt.target.classList[1] !== 'map__pin--main';
-
-  if (pressedImg || pressedButton) {
-    disablePin();
-    deleteOpenedPopup();
-    createPopup(offers[activatePin(evt)]);
-    setFocus();
-    console.log('открыли: клик, стадия: ' + evt.eventPhase);
-  }
-};
 
 /**
  * @description обработчик события клик по кнопке закрытия открытого popup с обяъвлением.
- * Вызывается на
  * @param {object} evt
  */
 var closeButtonClickHandler = function (evt) {
   if (evt.target.classList[0] === 'popup__close') {
     evt.target.parentNode.classList.add('hidden');
     disablePin();
-    console.log('закрыли: клик, стадия:' + evt.eventPhase);
   }
 };
 
 /**
- *
+ * @description обработчик события нажатия кнопки Esc, когда есть открытый popup с обяъвлением.
  * @param {object} evt
  */
 var popupEscKeydownHandler = function (evt) {
@@ -389,13 +348,10 @@ var popupEscKeydownHandler = function (evt) {
     var popup = document.querySelector('.popup:not(.hidden)');
     popup.classList.add('hidden');
     disablePin();
-    console.log('закрыли: Esc, стадия: ' + evt.eventPhase);
   }
 };
 
 mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
-
-pinsBlock.addEventListener('click', pinClickHandler);
 
 document.addEventListener('click', closeButtonClickHandler);
 
