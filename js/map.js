@@ -419,7 +419,7 @@ adTimeOut.addEventListener('change', function () {
 
 // Значение поля «Тип жилья» синхронизировано с минимальной ценой
 
-var setPriceForSelectedType = function () {
+var setPriceForHTMLSelectedType = function () {
   if (adType.options.selectedIndex === 0) {
     adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
   } else if (adType.options.selectedIndex === 1) {
@@ -431,7 +431,7 @@ var setPriceForSelectedType = function () {
   }
 };
 
-setPriceForSelectedType();
+setPriceForHTMLSelectedType();
 
 adType.addEventListener('change', function () {
   if (adType.options.selectedIndex === 0) {
@@ -456,50 +456,51 @@ adType.addEventListener('change', function () {
  В обратную сторону синхронизацию делать не нужно
  */
 
-var setRoomsForSelectedType = function () {
+var setRoomsForHTMLSelectedType = function () {
   if (adRooms.options.selectedIndex === 0) {
-    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[2].selected = true;
     adGuests.options[0].setAttribute('disabled', 'disabled');
     adGuests.options[1].setAttribute('disabled', 'disabled');
     adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 1) {
-    adGuests.options[1].removeAttribute('disabled');
-    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[2].selected = true;
     adGuests.options[0].setAttribute('disabled', 'disabled');
     adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 2) {
-    adGuests.options[0].removeAttribute('disabled');
-    adGuests.options[1].removeAttribute('disabled');
-    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[2].selected = true;
     adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 3) {
-    adGuests.options[3].removeAttribute('disabled');
+    adGuests.options[3].selected = true;
     adGuests.options[0].setAttribute('disabled', 'disabled');
     adGuests.options[1].setAttribute('disabled', 'disabled');
     adGuests.options[2].setAttribute('disabled', 'disabled');
   }
 };
 
-setRoomsForSelectedType();
+setRoomsForHTMLSelectedType();
 
 adRooms.addEventListener('change', function () {
   if (adRooms.options.selectedIndex === 0) {
     adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[2].selected = true;
     adGuests.options[0].setAttribute('disabled', 'disabled');
     adGuests.options[1].setAttribute('disabled', 'disabled');
     adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 1) {
     adGuests.options[1].removeAttribute('disabled');
     adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[2].selected = true;
     adGuests.options[0].setAttribute('disabled', 'disabled');
     adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 2) {
     adGuests.options[0].removeAttribute('disabled');
     adGuests.options[1].removeAttribute('disabled');
     adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[2].selected = true;
     adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 3) {
     adGuests.options[3].removeAttribute('disabled');
+    adGuests.options[3].selected = true;
     adGuests.options[0].setAttribute('disabled', 'disabled');
     adGuests.options[1].setAttribute('disabled', 'disabled');
     adGuests.options[2].setAttribute('disabled', 'disabled');
