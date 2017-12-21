@@ -352,3 +352,143 @@ document.addEventListener('keydown', popupEscKeydownHandler);
 
 fadeMap();
 disableForm();
+
+
+// В А Л И Д А Ц И Я   Ф О Р М Ы
+
+/*
+Заголовок объявления:
+Обязательное поле
+Минимальная длина — 30 символов
+Макcимальная длина — 100 символов
+
+Цена за ночь:
+Обязательное поле
+Числовое поле
+Минимальное значение — 0
+Значение по умолчанию - 1000
+Максимальное значение — 1 000 000
+*/
+
+var adForm = document.querySelector('.notice__form');
+var adAddress = document.querySelector('#address');
+var adTitle = document.querySelector('#title');
+var adPrice = document.querySelector('#price');
+var adTimeInt = document.querySelector('#timein');
+var adTimeOut = document.querySelector('#timeout');
+var adType = document.querySelector('#type');
+var adRooms = document.querySelector('#room_number');
+var adGuests = document.querySelector('#capacity');
+
+
+adTitle.addEventListener('invalid', function () {
+  if (adTitle.validity.valueMissing) {
+    adTitle.setCustomValidity('Это обязательное поле. Введите от 30 до 100 символов.');
+  } else if (adTitle.validity.tooShort) {
+    adTitle.setCustomValidity('Минимальная длина — 30 символов');
+  } else {
+    adTitle.setCustomValidity('');
+  }
+});
+
+adPrice.addEventListener('invalid', function () {
+  if (adPrice.value === '' || adPrice.validity.valueMissing) {
+    adPrice.setCustomValidity('Это обязательное поле. Введите число.');
+  } else if (adPrice.validity.rangeUnderflow) {
+    adPrice.setCustomValidity('Минимальное значение цены - ' + adPrice.min);
+  } else if (adPrice.validity.rangeOverflow) {
+    adPrice.setCustomValidity('Максимальное значение цены - ' + adPrice.max);
+  } else {
+    adPrice.setCustomValidity('');
+  }
+});
+
+// Поля «время заезда» и «время выезда» синхронизированы
+
+adTimeInt.addEventListener('change', function () {
+  if (adTimeInt.options.selectedIndex === 0) {
+    adTimeOut.options[0].selected = true;
+  } else if (adTimeInt.options.selectedIndex === 1) {
+    adTimeOut.options[1].selected = true;
+  } else if (adTimeInt.options.selectedIndex === 2) {
+    adTimeOut.options[2].selected = true;
+  }
+});
+
+adTimeOut.addEventListener('change', function () {
+  if (adTimeOut.options.selectedIndex === 0) {
+    adTimeInt.options[0].selected = true;
+  } else if (adTimeOut.options.selectedIndex === 1) {
+    adTimeInt.options[1].selected = true;
+  } else if (adTimeOut.options.selectedIndex === 2) {
+    adTimeInt.options[2].selected = true;
+  }
+});
+
+/*
+Значение поля «Тип жилья» синхронизировано с минимальной ценой следующим образом:
+«Лачуга» — минимальная цена 0
+«Квартира» — минимальная цена 1000
+«Дом» — минимальная цена 5000
+«Дворец» — минимальная цена 10000
+ */
+
+adType.addEventListener('change', function () {
+  if (adType.options.selectedIndex === 0) {
+    adPrice.setAttribute('min', '1000');
+  } else if (adType.options.selectedIndex === 1) {
+    adPrice.setAttribute('min', '0');
+  } else if (adType.options.selectedIndex === 2) {
+    adPrice.setAttribute('min', '5000');
+  } else if (adType.options.selectedIndex === 3) {
+    adPrice.setAttribute('min', '10000');
+  }
+});
+
+/*
+Количество комнат связано с количеством гостей:
+1 комната — «для одного гостя»
+2 комнаты — «для 2-х или 1-го гостя»
+3 комнаты — «для 2-х, 1-го или 3-х гостей»
+100 комнат — «не для гостей»
+При изменении количества комнат должно автоматически меняться количество гостей,
+ которых можно разместить.
+ В обратную сторону синхронизацию делать не нужно
+ */
+
+adRooms.addEventListener('change', function () {
+  if (adRooms.options.selectedIndex === 0) {
+    adGuests.options[2].selected = true;
+    adGuests.options[0].selected = false;
+    adGuests.options[1].selected = false;
+    adGuests.options[3].selected = false;
+  } else if (adRooms.options.selectedIndex === 1) {
+    adGuests.options[1].selected = true;
+    adGuests.options[2].selected = true;
+    adGuests.options[0].selected = false;
+    adGuests.options[3].selected = false;
+  } else if (adRooms.options.selectedIndex === 2) {
+    adGuests.options[0].selected = true;
+    adGuests.options[1].selected = true;
+    adGuests.options[2].selected = true;
+    adGuests.options[3].selected = false;
+  } else if (adRooms.options.selectedIndex === 3) {
+    adGuests.options[3].selected = true;
+    adGuests.options[0].selected = false;
+    adGuests.options[1].selected = false;
+    adGuests.options[2].selected = false;
+  }
+});
+
+
+adForm.addEventListener('submit', function (evt) {
+  var inputs = [adTitle, adPrice, adAddress];
+
+  for (var w = 0; w < inputs.length; w++) {
+    if (!inputs[w].validity.valid) {
+      inputs[w].style.borderColor = 'red';
+      evt.preventDefault();
+    }
+  }
+}, false);
+
