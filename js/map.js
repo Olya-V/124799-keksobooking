@@ -374,7 +374,7 @@ var adRooms = document.querySelector('#room_number');
 var adGuests = document.querySelector('#capacity');
 
 /**
- * @description выводит комментарии, если поле Заголовок не заполненно или введено менее 30 символов
+ * @description выводит комментарии, если поле Заголовок не заполнено или введено менее 30 символов
  */
 adTitle.addEventListener('invalid', function () {
   if (adTitle.validity.valueMissing) {
@@ -387,7 +387,7 @@ adTitle.addEventListener('invalid', function () {
 });
 
 /**
- * @description выводит комментарии, если поле Цена не заполненно или заполненно неверно
+ * @description выводит комментарии, если поле Цена не заполненно или заполнено неверно
  */
 adPrice.addEventListener('invalid', function () {
   if (adPrice.value === '' || adPrice.validity.valueMissing) {
@@ -414,7 +414,6 @@ adTimeInt.addEventListener('change', function () {
 adTimeOut.addEventListener('change', function () {
   adTimeInt.options[adTimeOut.options.selectedIndex].selected = true;
 });
-
 
 /**
  * @description назначает минимальную цену в зависимости от отмеченного атрибутом selected в HTML типа жилья
