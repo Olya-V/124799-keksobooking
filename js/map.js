@@ -422,6 +422,12 @@ adTimeOut.addEventListener('change', function () {
 var setPriceForSelectedType = function () {
   if (adType.options.selectedIndex === 0) {
     adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
+  } else if (adType.options.selectedIndex === 1) {
+    adPrice.setAttribute('min', SHACK_MIN_PRICE);
+  } else if (adType.options.selectedIndex === 2) {
+    adPrice.setAttribute('min', HOUSE_MIN_PRICE);
+  } else if (adType.options.selectedIndex === 3) {
+    adPrice.setAttribute('min', PALACE_MIN_PRICE);
   }
 };
 
