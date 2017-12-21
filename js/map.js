@@ -456,29 +456,56 @@ adType.addEventListener('change', function () {
  В обратную сторону синхронизацию делать не нужно
  */
 
+var setRoomsForSelectedType = function () {
+  if (adRooms.options.selectedIndex === 0) {
+    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[0].setAttribute('disabled', 'disabled');
+    adGuests.options[1].setAttribute('disabled', 'disabled');
+    adGuests.options[3].setAttribute('disabled', 'disabled');
+  } else if (adRooms.options.selectedIndex === 1) {
+    adGuests.options[1].removeAttribute('disabled');
+    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[0].setAttribute('disabled', 'disabled');
+    adGuests.options[3].setAttribute('disabled', 'disabled');
+  } else if (adRooms.options.selectedIndex === 2) {
+    adGuests.options[0].removeAttribute('disabled');
+    adGuests.options[1].removeAttribute('disabled');
+    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[3].setAttribute('disabled', 'disabled');
+  } else if (adRooms.options.selectedIndex === 3) {
+    adGuests.options[3].removeAttribute('disabled');
+    adGuests.options[0].setAttribute('disabled', 'disabled');
+    adGuests.options[1].setAttribute('disabled', 'disabled');
+    adGuests.options[2].setAttribute('disabled', 'disabled');
+  }
+};
+
+setRoomsForSelectedType();
+
 adRooms.addEventListener('change', function () {
   if (adRooms.options.selectedIndex === 0) {
-    adGuests.options[2].selected = true;
-    adGuests.options[0].selected = false;
-    adGuests.options[1].selected = false;
-    adGuests.options[3].selected = false;
+    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[0].setAttribute('disabled', 'disabled');
+    adGuests.options[1].setAttribute('disabled', 'disabled');
+    adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 1) {
-    adGuests.options[1].selected = true;
-    adGuests.options[2].selected = true;
-    adGuests.options[0].selected = false;
-    adGuests.options[3].selected = false;
+    adGuests.options[1].removeAttribute('disabled');
+    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[0].setAttribute('disabled', 'disabled');
+    adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 2) {
-    adGuests.options[0].selected = true;
-    adGuests.options[1].selected = true;
-    adGuests.options[2].selected = true;
-    adGuests.options[3].selected = false;
+    adGuests.options[0].removeAttribute('disabled');
+    adGuests.options[1].removeAttribute('disabled');
+    adGuests.options[2].removeAttribute('disabled');
+    adGuests.options[3].setAttribute('disabled', 'disabled');
   } else if (adRooms.options.selectedIndex === 3) {
-    adGuests.options[3].selected = true;
-    adGuests.options[0].selected = false;
-    adGuests.options[1].selected = false;
-    adGuests.options[2].selected = false;
+    adGuests.options[3].removeAttribute('disabled');
+    adGuests.options[0].setAttribute('disabled', 'disabled');
+    adGuests.options[1].setAttribute('disabled', 'disabled');
+    adGuests.options[2].setAttribute('disabled', 'disabled');
   }
 });
+
 
 adForm.addEventListener('submit', function (evt) {
   var inputs = [adTitle, adPrice, adAddress];
