@@ -356,19 +356,12 @@ disableForm();
 
 // В А Л И Д А Ц И Я   Ф О Р М Ы
 
-/*
-Заголовок объявления:
-Обязательное поле
-Минимальная длина — 30 символов
-Макcимальная длина — 100 символов
-
-Цена за ночь:
-Обязательное поле
-Числовое поле
-Минимальное значение — 0
-Значение по умолчанию - 1000
-Максимальное значение — 1 000 000
-*/
+var TITLE_MIN_LENGTH = 30;
+var TITLE_MAX_LENGTH = 100;
+var SHACK_MIN_PRICE = '0';
+var APPARTMENT_MIN_PRICE = '1000';
+var HOUSE_MIN_PRICE = '5000';
+var PALACE_MIN_PRICE = '10000';
 
 var adForm = document.querySelector('.notice__form');
 var adAddress = document.querySelector('#address');
@@ -380,12 +373,11 @@ var adType = document.querySelector('#type');
 var adRooms = document.querySelector('#room_number');
 var adGuests = document.querySelector('#capacity');
 
-
 adTitle.addEventListener('invalid', function () {
   if (adTitle.validity.valueMissing) {
-    adTitle.setCustomValidity('Это обязательное поле. Введите от 30 до 100 символов.');
+    adTitle.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH+ ' символов.');
   } else if (adTitle.validity.tooShort) {
-    adTitle.setCustomValidity('Минимальная длина — 30 символов');
+    adTitle.setCustomValidity('Минимальная длина — ' + TITLE_MIN_LENGTH + ' символов');
   } else {
     adTitle.setCustomValidity('');
   }
@@ -425,16 +417,11 @@ adTimeOut.addEventListener('change', function () {
   }
 });
 
-/*
-Значение поля «Тип жилья» синхронизировано с минимальной ценой следующим образом:
-«Лачуга» — минимальная цена 0
-«Квартира» — минимальная цена 1000
-«Дом» — минимальная цена 5000
-«Дворец» — минимальная цена 10000
- */
+// Значение поля «Тип жилья» синхронизировано с минимальной ценой
+
 var setPriceForSelectedType = function () {
   if (adType.options.selectedIndex === 0) {
-    adPrice.setAttribute('min', '1000');
+    adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
   }
 };
 
@@ -442,13 +429,13 @@ setPriceForSelectedType();
 
 adType.addEventListener('change', function () {
   if (adType.options.selectedIndex === 0) {
-    adPrice.setAttribute('min', '1000');
+    adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
   } else if (adType.options.selectedIndex === 1) {
-    adPrice.setAttribute('min', '0');
+    adPrice.setAttribute('min', SHACK_MIN_PRICE);
   } else if (adType.options.selectedIndex === 2) {
-    adPrice.setAttribute('min', '5000');
+    adPrice.setAttribute('min', HOUSE_MIN_PRICE);
   } else if (adType.options.selectedIndex === 3) {
-    adPrice.setAttribute('min', '10000');
+    adPrice.setAttribute('min', PALACE_MIN_PRICE);
   }
 });
 
