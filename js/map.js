@@ -375,7 +375,7 @@ var adGuests = document.querySelector('#capacity');
 
 adTitle.addEventListener('invalid', function () {
   if (adTitle.validity.valueMissing) {
-    adTitle.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH+ ' символов.');
+    adTitle.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH + ' символов.');
   } else if (adTitle.validity.tooShort) {
     adTitle.setCustomValidity('Минимальная длина — ' + TITLE_MIN_LENGTH + ' символов');
   } else {
