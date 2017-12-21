@@ -373,6 +373,9 @@ var adType = document.querySelector('#type');
 var adRooms = document.querySelector('#room_number');
 var adGuests = document.querySelector('#capacity');
 
+/**
+ * @description выводит комментарии, если поле Заголовок не заполненно или введено менее 30 символов
+ */
 adTitle.addEventListener('invalid', function () {
   if (adTitle.validity.valueMissing) {
     adTitle.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH + ' символов.');
@@ -383,6 +386,9 @@ adTitle.addEventListener('invalid', function () {
   }
 });
 
+/**
+ * @description выводит комментарии, если поле Цена не заполненно или заполненно неверно
+ */
 adPrice.addEventListener('invalid', function () {
   if (adPrice.value === '' || adPrice.validity.valueMissing) {
     adPrice.setCustomValidity('Это обязательное поле. Введите число.');
@@ -395,119 +401,79 @@ adPrice.addEventListener('invalid', function () {
   }
 });
 
-// Поля «время заезда» и «время выезда» синхронизированы
-
+/**
+ * @description при выборе время заезда синхронизирует время выезда
+ */
 adTimeInt.addEventListener('change', function () {
-  if (adTimeInt.options.selectedIndex === 0) {
-    adTimeOut.options[0].selected = true;
-  } else if (adTimeInt.options.selectedIndex === 1) {
-    adTimeOut.options[1].selected = true;
-  } else if (adTimeInt.options.selectedIndex === 2) {
-    adTimeOut.options[2].selected = true;
-  }
+  adTimeOut.options[adTimeInt.options.selectedIndex].selected = true;
 });
 
+/**
+ * @description при выборе время выезда синхронизирует время заезда
+ */
 adTimeOut.addEventListener('change', function () {
-  if (adTimeOut.options.selectedIndex === 0) {
-    adTimeInt.options[0].selected = true;
-  } else if (adTimeOut.options.selectedIndex === 1) {
-    adTimeInt.options[1].selected = true;
-  } else if (adTimeOut.options.selectedIndex === 2) {
-    adTimeInt.options[2].selected = true;
-  }
+  adTimeInt.options[adTimeOut.options.selectedIndex].selected = true;
 });
 
-// Значение поля «Тип жилья» синхронизировано с минимальной ценой
 
+/**
+ * @description назначает минимальную цену в зависимости от отмеченного атрибутом selected в HTML типа жилья
+ */
 var setPriceForHTMLSelectedType = function () {
-  if (adType.options.selectedIndex === 0) {
-    adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
-  } else if (adType.options.selectedIndex === 1) {
-    adPrice.setAttribute('min', SHACK_MIN_PRICE);
-  } else if (adType.options.selectedIndex === 2) {
-    adPrice.setAttribute('min', HOUSE_MIN_PRICE);
-  } else if (adType.options.selectedIndex === 3) {
-    adPrice.setAttribute('min', PALACE_MIN_PRICE);
+  switch (adType.options.selectedIndex) {
+    case 0:
+      adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
+      break;
+    case 1:
+      adPrice.setAttribute('min', SHACK_MIN_PRICE);
+      break;
+    case 2:
+      adPrice.setAttribute('min', HOUSE_MIN_PRICE);
+      break;
+    case 3:
+      adPrice.setAttribute('min', PALACE_MIN_PRICE);
+      break;
   }
 };
 
 setPriceForHTMLSelectedType();
 
-adType.addEventListener('change', function () {
-  if (adType.options.selectedIndex === 0) {
-    adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
-  } else if (adType.options.selectedIndex === 1) {
-    adPrice.setAttribute('min', SHACK_MIN_PRICE);
-  } else if (adType.options.selectedIndex === 2) {
-    adPrice.setAttribute('min', HOUSE_MIN_PRICE);
-  } else if (adType.options.selectedIndex === 3) {
-    adPrice.setAttribute('min', PALACE_MIN_PRICE);
-  }
-});
-
-/*
-Количество комнат связано с количеством гостей:
-1 комната — «для одного гостя»
-2 комнаты — «для 2-х или 1-го гостя»
-3 комнаты — «для 2-х, 1-го или 3-х гостей»
-100 комнат — «не для гостей»
-При изменении количества комнат должно автоматически меняться количество гостей,
- которых можно разместить.
- В обратную сторону синхронизацию делать не нужно
+/**
+ * @description при выборе в форме типа жилья синхронизирует минимальную цену
  */
+adType.addEventListener('change', setPriceForHTMLSelectedType);
 
-var setRoomsForHTMLSelectedType = function () {
-  if (adRooms.options.selectedIndex === 0) {
-    adGuests.options[2].selected = true;
-    adGuests.options[0].setAttribute('disabled', 'disabled');
-    adGuests.options[1].setAttribute('disabled', 'disabled');
-    adGuests.options[3].setAttribute('disabled', 'disabled');
-  } else if (adRooms.options.selectedIndex === 1) {
-    adGuests.options[2].selected = true;
-    adGuests.options[0].setAttribute('disabled', 'disabled');
-    adGuests.options[3].setAttribute('disabled', 'disabled');
-  } else if (adRooms.options.selectedIndex === 2) {
-    adGuests.options[2].selected = true;
-    adGuests.options[3].setAttribute('disabled', 'disabled');
-  } else if (adRooms.options.selectedIndex === 3) {
-    adGuests.options[3].selected = true;
-    adGuests.options[0].setAttribute('disabled', 'disabled');
-    adGuests.options[1].setAttribute('disabled', 'disabled');
-    adGuests.options[2].setAttribute('disabled', 'disabled');
+/**
+ * @description синхронизирует кол-во гостей в зависимости от отмеченного атрибутом selected в HTML кол-ва комнат
+ */
+var setRoomsForSelectedType = function () {
+  switch (adRooms.options.selectedIndex) {
+    case 0:
+      adGuests.options[2].selected = true;
+      break;
+    case 1:
+      adGuests.options[1].selected = true;
+      break;
+    case 2:
+      adGuests.options[0].selected = true;
+      break;
+    case 3:
+      adGuests.options[3].selected = true;
+      break;
   }
 };
 
-setRoomsForHTMLSelectedType();
+setRoomsForSelectedType();
 
-adRooms.addEventListener('change', function () {
-  if (adRooms.options.selectedIndex === 0) {
-    adGuests.options[2].removeAttribute('disabled');
-    adGuests.options[2].selected = true;
-    adGuests.options[0].setAttribute('disabled', 'disabled');
-    adGuests.options[1].setAttribute('disabled', 'disabled');
-    adGuests.options[3].setAttribute('disabled', 'disabled');
-  } else if (adRooms.options.selectedIndex === 1) {
-    adGuests.options[1].removeAttribute('disabled');
-    adGuests.options[2].removeAttribute('disabled');
-    adGuests.options[2].selected = true;
-    adGuests.options[0].setAttribute('disabled', 'disabled');
-    adGuests.options[3].setAttribute('disabled', 'disabled');
-  } else if (adRooms.options.selectedIndex === 2) {
-    adGuests.options[0].removeAttribute('disabled');
-    adGuests.options[1].removeAttribute('disabled');
-    adGuests.options[2].removeAttribute('disabled');
-    adGuests.options[2].selected = true;
-    adGuests.options[3].setAttribute('disabled', 'disabled');
-  } else if (adRooms.options.selectedIndex === 3) {
-    adGuests.options[3].removeAttribute('disabled');
-    adGuests.options[3].selected = true;
-    adGuests.options[0].setAttribute('disabled', 'disabled');
-    adGuests.options[1].setAttribute('disabled', 'disabled');
-    adGuests.options[2].setAttribute('disabled', 'disabled');
-  }
-});
+/**
+ * @description при выборе кол-ва комнат в форме синхронизирует кол-во гостей
+ */
+adRooms.addEventListener('change', setRoomsForSelectedType);
 
 
+/**
+ * @description проверяет перед отправкой формы input-ы
+ */
 adForm.addEventListener('submit', function (evt) {
   var inputs = [adTitle, adPrice, adAddress];
 
