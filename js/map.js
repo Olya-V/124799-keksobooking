@@ -432,6 +432,13 @@ adTimeOut.addEventListener('change', function () {
 «Дом» — минимальная цена 5000
 «Дворец» — минимальная цена 10000
  */
+var setPriceForSelectedType = function () {
+  if (adType.options.selectedIndex === 0) {
+    adPrice.setAttribute('min', '1000');
+  }
+};
+
+setPriceForSelectedType();
 
 adType.addEventListener('change', function () {
   if (adType.options.selectedIndex === 0) {
@@ -479,7 +486,6 @@ adRooms.addEventListener('change', function () {
     adGuests.options[2].selected = false;
   }
 });
-
 
 adForm.addEventListener('submit', function (evt) {
   var inputs = [adTitle, adPrice, adAddress];
