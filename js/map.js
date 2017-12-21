@@ -419,7 +419,7 @@ adTimeOut.addEventListener('change', function () {
 /**
  * @description назначает минимальную цену в зависимости от отмеченного атрибутом selected в HTML типа жилья
  */
-var setPriceForHTMLSelectedType = function () {
+var setPriceForSelectedType = function () {
   switch (adType.options.selectedIndex) {
     case 0:
       adPrice.setAttribute('min', APPARTMENT_MIN_PRICE);
@@ -436,12 +436,16 @@ var setPriceForHTMLSelectedType = function () {
   }
 };
 
-setPriceForHTMLSelectedType();
+setPriceForSelectedType();
+
+var TypeChangeHandler = function () {
+  setPriceForSelectedType();
+};
 
 /**
  * @description при выборе в форме типа жилья синхронизирует минимальную цену
  */
-adType.addEventListener('change', setPriceForHTMLSelectedType);
+adType.addEventListener('change', TypeChangeHandler);
 
 /**
  * @description синхронизирует кол-во гостей в зависимости от отмеченного атрибутом selected в HTML кол-ва комнат
@@ -465,10 +469,14 @@ var setRoomsForSelectedType = function () {
 
 setRoomsForSelectedType();
 
+var RoomChangeHandler = function () {
+  setRoomsForSelectedType();
+};
+
 /**
  * @description при выборе кол-ва комнат в форме синхронизирует кол-во гостей
  */
-adRooms.addEventListener('change', setRoomsForSelectedType);
+adRooms.addEventListener('change', RoomChangeHandler);
 
 
 /**
