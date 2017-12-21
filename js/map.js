@@ -485,7 +485,7 @@ adForm.addEventListener('submit', function (evt) {
   var inputs = [adTitle, adPrice, adAddress];
 
   for (var w = 0; w < inputs.length; w++) {
-    if (!inputs[w].validity.valid) {
+    if (!inputs[w].validity.valid || inputs[w].value === '') {
       inputs[w].style.borderColor = 'red';
       evt.preventDefault();
     }
