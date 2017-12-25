@@ -1,15 +1,10 @@
 'use strict';
+
 (function () {
   var title = ['Большая уютная квартира', 'Маленькая неуютная квартира',
     'Огромный прекрасный дворец', 'Маленький ужасный дворец',
     'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
     'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-
-  var type = {
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
-  };
   var checkin = ['12:00', '13:00', '14:00'];
   var checkout = ['12:00', '13:00', '14:00'];
   var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -18,6 +13,11 @@
   var PRICE = {
     MIN: 1000,
     MAX: 1000000
+  };
+  var type = {
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
   };
   var ROOMS = {
     MIN: 1,
@@ -35,45 +35,6 @@
   };
 
   /**
-   * @description возвращает случайное число от min до max, всключая max
-   * @param {number} min
-   * @param {number} max
-   * @return {number} случайное число
-   */
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max - min));
-  };
-
-  /**
-   * @description возвращает случайный элемент массива по рандомному индексу, элементы могут повторяться
-   * @param {array} arrayOfElements
-   * @return {*} рандомный элемент массива
-   */
-  var getRandomElement = function (arrayOfElements) {
-    var randomIndex = getRandomNumber(0, arrayOfElements.length - 1);
-    return arrayOfElements[randomIndex];
-  };
-
-  /**
-   * @description возвращает случайный элемент массива по рандомному индексу, элементы не повторяются
-   * @param {array} arrayOfElements
-   * @return {*} рандомный элемент массива
-   */
-  var getRandomElementNoRepeat = function (arrayOfElements) {
-    var randomIndex = getRandomNumber(0, arrayOfElements.length - 1);
-    return arrayOfElements.splice(randomIndex, 1);
-  };
-
-  /**
-   * @description возвращает массив случайной длинны исходя из переданного массива
-   * @param {array} arrayOfElements исходный массив данных
-   * @return {array} новый массив
-   */
-  var getRandomArray = function (arrayOfElements) {
-    return arrayOfElements.slice(getRandomNumber(1, arrayOfElements.length - 1));
-  };
-
-  /**
    * @description возвращает ссылку на аватарку автора объявления
    * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
    * @return {string} строку с адресом картинки аватарки
@@ -88,22 +49,22 @@
    * @return {object} объект объявление
    */
   var createOffer = function (i) {
-    var coordinateX = getRandomNumber(LOCATION.X_MIN, LOCATION.X_MAX);
-    var coordinateY = getRandomNumber(LOCATION.Y_MIN, LOCATION.Y_MAX);
+    var coordinateX = window.utils.getRandomNumber(LOCATION.X_MIN, LOCATION.X_MAX);
+    var coordinateY = window.utils.getRandomNumber(LOCATION.Y_MIN, LOCATION.Y_MAX);
     return {
       'author': {
         'avatar': createAvatarUrl(i)
       },
       'offer': {
-        'title': getRandomElementNoRepeat(title),
+        'title': window.utils.getRandomElementNoRepeat(title),
         'address': coordinateX + ', ' + coordinateY,
-        'price': getRandomNumber(PRICE.MIN, PRICE.MAX),
-        'type': getRandomElement(Object.keys(type)),
-        'rooms': getRandomNumber(ROOMS.MIN, ROOMS.MAX),
-        'guests': getRandomNumber(GUESTS.MIN, GUESTS.MAX),
-        'checkin': getRandomElement(checkin),
-        'checkout': getRandomElement(checkout),
-        'features': getRandomArray(features),
+        'price': window.utils.getRandomNumber(PRICE.MIN, PRICE.MAX),
+        'type': window.utils.getRandomElement(Object.keys(type)),
+        'rooms': window.utils.getRandomNumber(ROOMS.MIN, ROOMS.MAX),
+        'guests': window.utils.getRandomNumber(GUESTS.MIN, GUESTS.MAX),
+        'checkin': window.utils.getRandomElement(checkin),
+        'checkout': window.utils.getRandomElement(checkout),
+        'features': window.utils.getRandomArray(features),
         'description': '',
         'photos': []
       },
@@ -114,17 +75,16 @@
     };
   };
 
-  /**
-   * @description создат массив с объектами обяъвлений
-   * @return массив с объектами обяъвлений
-   */
+  var offersArray = [];
+  for (var j = 0; j < OBJECT_COUNT; j++) {
+    offersArray.push(createOffer(j));
+  }
   window.data = {
-    offers: function () {
-      var offersArray = [];
-      for (var j = 0; j < OBJECT_COUNT; j++) {
-        offersArray.push(createOffer(j));
-      }
-      return offersArray;
-    }
+    map: document.querySelector('section.map'),
+    /**
+     * @description создат массив с объектами обяъвлений
+     * @return {array} массив с объектами обяъвлений
+     */
+    offers: offersArray
   };
 })();

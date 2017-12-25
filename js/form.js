@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var TITLE_MIN_LENGTH = 30;
   var TITLE_MAX_LENGTH = 100;

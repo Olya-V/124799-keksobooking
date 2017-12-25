@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var ESC_KEYCODE = 27;
 
@@ -61,29 +62,8 @@
   var KeksPinClickHandler = function () {
     showMap();
     activateForm();
-    showPins();
+    window.pin.showPins();
   };
-
-  /**
-   * @description устанавливает фокус на кнопке закрытия popup
-   */
-  var setFocus = function () {
-    var popup = document.querySelector('.popup');
-    var closeButton = popup.children[1];
-    closeButton.focus();
-  };
-
-  /**
-   * @description удаляет открые ранее popup
-   */
-  var deleteOpenedPopup = function () {
-    var openedPopup = document.querySelector('.popup');
-
-    if (openedPopup) {
-      map.removeChild(openedPopup);
-    }
-  };
-
 
   /**
    * @description обработчик события клик по кнопке закрытия открытого popup с обяъвлением.
@@ -92,7 +72,7 @@
   var closeButtonClickHandler = function (evt) {
     if (evt.target.classList[0] === 'popup__close') {
       evt.target.parentNode.classList.add('hidden');
-      disablePin();
+      window.pin.disablePin();
     }
   };
 
@@ -104,7 +84,7 @@
     if (evt.keyCode === ESC_KEYCODE) {
       var popup = document.querySelector('.popup:not(.hidden)');
       popup.classList.add('hidden');
-      disablePin();
+      window.pin.disablePin();
     }
   };
 
@@ -117,4 +97,25 @@
   fadeMap();
   disableForm();
 
+  window.map = {
+    /**
+     * @description устанавливает фокус на кнопке закрытия popup
+     */
+    setFocus: function () {
+      var popup = document.querySelector('.popup');
+      var closeButton = popup.children[1];
+      closeButton.focus();
+    },
+
+    /**
+     * @description удаляет открые ранее popup
+     */
+    deleteOpenedPopup: function () {
+      var openedPopup = document.querySelector('.popup');
+
+      if (openedPopup) {
+        map.removeChild(openedPopup);
+      }
+    }
+  };
 })();
