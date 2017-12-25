@@ -8,7 +8,11 @@
   var checkin = ['12:00', '13:00', '14:00'];
   var checkout = ['12:00', '13:00', '14:00'];
   var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
+  var type = {
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
+  };
   var OBJECT_COUNT = 8;
   var PRICE = {
     MIN: 1000,
@@ -54,7 +58,7 @@
         'title': window.utils.getRandomElementNoRepeat(title),
         'address': coordinateX + ', ' + coordinateY,
         'price': window.utils.getRandomNumber(PRICE.MIN, PRICE.MAX),
-        'type': window.utils.getRandomElement(Object.keys(window.data.type)),
+        'type': window.utils.getRandomElement(Object.keys(type)),
         'rooms': window.utils.getRandomNumber(ROOMS.MIN, ROOMS.MAX),
         'guests': window.utils.getRandomNumber(GUESTS.MIN, GUESTS.MAX),
         'checkin': window.utils.getRandomElement(checkin),
@@ -81,10 +85,6 @@
      * @return {array} массив с объектами обяъвлений
      */
     offers: offersArray,
-    type: {
-      'flat': 'Квартира',
-      'house': 'Дом',
-      'bungalo': 'Бунгало'
-    }
+    type: type
   };
 })();
