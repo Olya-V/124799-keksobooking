@@ -14,11 +14,6 @@
     MIN: 1000,
     MAX: 1000000
   };
-  var type = {
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
-  };
   var ROOMS = {
     MIN: 1,
     MAX: 5
@@ -59,7 +54,7 @@
         'title': window.utils.getRandomElementNoRepeat(title),
         'address': coordinateX + ', ' + coordinateY,
         'price': window.utils.getRandomNumber(PRICE.MIN, PRICE.MAX),
-        'type': window.utils.getRandomElement(Object.keys(type)),
+        'type': window.utils.getRandomElement(Object.keys(window.data.type)),
         'rooms': window.utils.getRandomNumber(ROOMS.MIN, ROOMS.MAX),
         'guests': window.utils.getRandomNumber(GUESTS.MIN, GUESTS.MAX),
         'checkin': window.utils.getRandomElement(checkin),
@@ -85,6 +80,11 @@
      * @description создат массив с объектами обяъвлений
      * @return {array} массив с объектами обяъвлений
      */
-    offers: offersArray
+    offers: offersArray,
+    type: {
+      'flat': 'Квартира',
+      'house': 'Дом',
+      'bungalo': 'Бунгало'
+    }
   };
 })();

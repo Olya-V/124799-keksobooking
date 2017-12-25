@@ -1,12 +1,6 @@
 'use strict';
 
 (function () {
-  var type = {
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
-  };
-
   /**
    * @description из списка всех возможных фич оставляет только те, которые есть в объекте объявление.
    * @param {array} objectFeatures массив фич объекта объявление
@@ -37,7 +31,7 @@
       elementAd.querySelector('h3').innerHTML = offerObject.offer.title;
       elementAd.querySelector('small').innerHTML = offerObject.offer.address;
       elementAd.querySelector('.popup__price').innerHTML = offerObject.offer.price + ' &#x20bd;/ночь';
-      elementAd.querySelector('h4').innerHTML = type[offerObject.offer.type];
+      elementAd.querySelector('h4').innerHTML = window.data.type[offerObject.offer.type];
       elementAd.querySelector('p:nth-of-type(3)').innerHTML = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
       elementAd.querySelector('p:nth-of-type(4)').innerHTML = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
       elementAd.querySelector('p:nth-of-type(5)').innerHTML = offerObject.offer.description;
