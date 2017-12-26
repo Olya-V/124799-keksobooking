@@ -13,6 +13,7 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+  var map = document.querySelector('section.map');
   var OBJECT_COUNT = 8;
   var PRICE = {
     MIN: 1000,
@@ -74,17 +75,22 @@
     };
   };
 
-  var offersArray = [];
-  for (var j = 0; j < OBJECT_COUNT; j++) {
-    offersArray.push(createOffer(j));
-  }
+  /**
+   * @description создает массив с объектами обяъвлений
+   * @param {Number} numberOfObjects максимальное количество объектов
+   * @return {Array} массив с объектами обяъвлений
+   */
+  var getOffersArray = function (numberOfObjects) {
+    var offersArray = [];
+    for (var j = 0; j < numberOfObjects; j++) {
+      offersArray.push(createOffer(j));
+    }
+    return offersArray;
+  };
   window.data = {
-    map: document.querySelector('section.map'),
-    /**
-     * @description создат массив с объектами обяъвлений
-     * @return {array} массив с объектами обяъвлений
-     */
-    offers: offersArray,
+    map: map,
+    offers: getOffersArray(OBJECT_COUNT),
     type: type
   };
 })();
+

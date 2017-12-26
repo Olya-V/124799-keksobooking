@@ -2,6 +2,7 @@
 
 (function () {
   var pinsBlock = document.querySelector('div.map__pins');
+  var mapPinMainKeks = document.querySelector('.map__pin--main');
 
   /**
    * @description создает DOM-элемен - пин
@@ -24,10 +25,10 @@
    * @param {object} evt
    */
   var pinClickHandler = function (evt) {
-    window.pin.disablePin();
-    window.map.deleteOpenedPopup();
-    window.card.popup(window.data.offers[window.pin.activatePin(evt)]);
-    window.map.setFocus();
+    disablePin();
+    window.card.deleteOpenedPopup();
+    window.card.popup(window.data.offers[activatePin(evt)]);
+    window.card.setFocus();
   };
 
   /**
@@ -43,37 +44,53 @@
     fragmentPins.appendChild(newPin);
   }
   pinsBlock.appendChild(fragmentPins);
-  window.pin = {
-    /**
-     * @description убирает класс .hidden у пинов,
-     */
-    showPins: function () {
-      var hidenPins = document.querySelectorAll('button.map__pin.hidden');
 
-      for (var g = 0; g < hidenPins.length; g++) {
-        hidenPins[g].classList.remove('hidden');
-      }
-    },
+  /**
+   * @description убирает класс .hidden у пинов,
+   */
+  var showPins = function () {
+    var hidenPins = document.querySelectorAll('button.map__pin.hidden');
 
-    /**
-     * @description деактивирует пины, которые были активны (убирает подсветку)
-     */
-    disablePin: function () {
-      var activePin = document.querySelector('.map__pin--active');
-      if (activePin) {
-        activePin.classList.remove('map__pin--active');
-      }
-    },
-
-    /**
-     * @description активирует пин при нажатии (пин подсвечивается)
-     * @param {object} evt
-     * @return {object} активный пин (button), по которому кликнули/нажали
-     */
-    activatePin: function (evt) {
-      var activePin = evt.currentTarget;
-      activePin.classList.add('map__pin--active');
-      return activePin.dataset.id;
+    for (var g = 0; g < hidenPins.length; g++) {
+      hidenPins[g].classList.remove('hidden');
     }
+  };
+
+  /**
+   * @description активирует пин при нажатии (пин подсвечивается)
+   * @param {object} evt
+   * @return {object} активный пин (button), по которому кликнули/нажали
+   */
+  var activatePin = function (evt) {
+    var activePin = evt.currentTarget;
+    activePin.classList.add('map__pin--active');
+    return activePin.dataset.id;
+  };
+
+  /**
+   * @description деактивирует пины, которые были активны (убирает подсветку)
+   */
+  var disablePin = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
+  };
+
+  /**
+   * @description обработчик события клик по Кекс-пину
+   * @constructor
+   */
+  var KeksPinClickHandler = function () {
+    window.map.showMap();
+    window.form.activateForm();
+    showPins();
+  };
+
+  mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
+
+  window.pin = {
+    showPins: showPins,
+    disablePin: disablePin
   };
 })();
