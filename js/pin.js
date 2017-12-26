@@ -27,7 +27,7 @@
   var pinClickHandler = function (evt) {
     disablePin();
     window.card.deleteOpenedPopup();
-    window.card.popup(window.data.offers[activatePin(evt)]);
+    window.card.popup(window.data.getOffers[activatePin(evt)]);
     window.card.setFocus();
   };
 
@@ -36,8 +36,8 @@
    * пины отрисовываются в блоке .map__pins
    */
   var fragmentPins = document.createDocumentFragment();
-  for (var k = 0; k < window.data.offers.length; k++) {
-    var newPin = createPin(window.data.offers[k]);
+  for (var k = 0; k < window.data.getOffers.length; k++) {
+    var newPin = createPin(window.data.getOffers[k]);
     newPin.classList.add('hidden');
     newPin.setAttribute('data-id', k);
     newPin.addEventListener('click', pinClickHandler);

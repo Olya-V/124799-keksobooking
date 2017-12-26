@@ -89,8 +89,8 @@
   };
   window.data = {
     map: map,
-    offers: getOffersArray(OBJECT_COUNT),
-    type: type
+    type: type,
+    getOffers: getOffersArray(OBJECT_COUNT)
   };
 })();
 
