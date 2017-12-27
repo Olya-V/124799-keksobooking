@@ -40,7 +40,6 @@
     return arrayOfElements.slice(getRandomNumber(1, arrayOfElements.length - 1));
   };
 
-
   /**
    * @description назначает координаты элементу
    * @param {*} element перемещаемый DOM-элемент
@@ -63,7 +62,7 @@
       moveEvt.preventDefault();
 
       var elementCoords = {
-        x: moveEvt.pageX,
+        x: moveEvt.pageX - window.map.mapOffset,
         y: moveEvt.pageY
       };
 
