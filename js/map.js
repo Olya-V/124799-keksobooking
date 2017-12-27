@@ -24,11 +24,10 @@
   };
 
   fadeMap();
-  window.utils.dragItem(window.pin.pinMain);
+  window.utils.dragItem(elementToMove);
   window.map = {
     dragLimits: dragLimits,
     movementArea: movementArea,
-    elementToMove: elementToMove,
     showMap: showMap
   };
 })();

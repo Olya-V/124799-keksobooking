@@ -96,8 +96,6 @@
   };
 
   pinMain.addEventListener('mouseup', keksPinClickHandler);
-  pinMain.addEventListener('mousedown', window.utils.mouseMovementHandler);
-
   window.pin = {
     pinMain: pinMain,
     pinMainParams: PIN_MAIN,
