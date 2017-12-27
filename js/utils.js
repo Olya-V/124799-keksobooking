@@ -69,16 +69,24 @@
           y: moveEvt.pageY - startCoords.y
         };
 
+        var elementStopCoords = {
+          x: null,
+          y: null
+        };
+
         if ((elementCoords.y) < window.map.dragLimits.yMin ||
           (elementCoords.y) > window.map.dragLimits.yMax ||
           (elementCoords.x) < window.map.dragLimits.xMin ||
           (elementCoords.x) > window.map.dragLimits.xMax) {
 
-          elementCoords.y = Math.min(Math.max(elementCoords.y, window.map.yMin), window.map.yMax);
-          elementCoords.x = Math.max(Math.min(window.map.xMax, elementCoords.x), window.map.xMin);
+          elementStopCoords.y = Math.min(Math.max(elementCoords.y, window.map.yMin), window.map.yMax);
+          elementStopCoords.x = Math.max(Math.min(window.map.xMax, elementCoords.x), window.map.xMin);
+        } else {
+          elementStopCoords.y = elementCoords.y;
+          elementStopCoords.x = elementCoords.x;
         }
-        assignElementsCoords(element, elementCoords.x, elementCoords.y);
-        window.form.assignAddress(elementCoords.x, elementCoords.y);
+        assignElementsCoords(element, elementStopCoords.x, elementStopCoords.y);
+        window.form.assignAddress(elementStopCoords.x, elementStopCoords.y);
       };
 
       var mouseUpHandler = function (upEvt) {
