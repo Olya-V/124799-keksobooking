@@ -27,16 +27,17 @@
     MIN: 1,
     MAX: 100
   };
+  var PIN_CUSTOM = {
+    HEIGHT: 64,
+    WIDTH: 46
+  };
   var LOCATION = {
     X_MIN: 300,
     X_MAX: 900,
     Y_MIN: 100,
     Y_MAX: 500
   };
-  var PIN_CUSTOM = {
-    HEIGHT: 64,
-    WIDTH: 46
-  };
+
   /**
    * @description возвращает ссылку на аватарку автора объявления
    * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов

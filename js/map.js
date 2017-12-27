@@ -4,8 +4,8 @@
   var mapOffset = document.querySelector('section.map').offsetLeft;
   var yMin = window.pin.pinLimits.Y_MIN;
   var yMax = window.pin.pinLimits.Y_MAX;
-  var xMin = (window.pin.pinMainParams.WIDTH / 2);
-  var xMax = (document.documentElement.clientWidth - (mapOffset * 2) - (window.pin.pinMainParams.WIDTH / 2));
+  var xMin = mapOffset + (window.pin.pinMainParams.WIDTH);
+  var xMax = (document.documentElement.clientWidth - mapOffset - (window.pin.pinMainParams.WIDTH));
   var movementArea = window.data.map;
   var elementToMove = window.pin.pinMain;
   /**

@@ -47,14 +47,19 @@
    * @param {number} y
    */
   var assignElementsCoords = function (element, x, y) {
-    element.style.top = y + 'px';
-    element.style.left = x + 'px';
+    element.style.left = (element.offsetLeft - x) + 'px';
+    element.style.top = (element.offsetTop - y) + 'px';
   };
 
+  var assignFinalElementsCoords = function (element, x, y) {
+    element.style.left = x + 'px';
+    element.style.top = y + 'px';
+  };
   /**
    * @description обработчик перемещения объекта мышью
    * @param {object} evt
    */
+  /*
   var mouseMovementHandler = function (evt) {
     evt.preventDefault();
 
@@ -102,4 +107,60 @@
     getRandomArray: getRandomArray,
     mouseMovementHandler: mouseMovementHandler
   };
+  */
+
+  var mouseMovementHandler = function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.pageX,
+      y: evt.pageY
+    };
+
+    var mouseMoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+      var shift = {
+        x: startCoords.x - moveEvt.pageX,
+        y: startCoords.y - moveEvt.pageY
+      };
+      startCoords = {
+        x: moveEvt.pageX,
+        y: moveEvt.pageY
+      };
+
+      // console.log(startCoords.x, startCoords.y);
+      // console.log(moveEvt);
+
+      if ((startCoords.y) <= window.map.yMin ||
+        (startCoords.y) >= window.map.yMax ||
+        (startCoords.x) <= window.map.xMin ||
+        (startCoords.x) >= window.map.xMax) {
+
+        window.map.movementArea.removeEventListener('mousemove', mouseMoveHandler);
+        window.map.movementArea.removeEventListener('mouseup', mouseUpHandler);
+      }
+
+      assignElementsCoords(window.map.elementToMove, shift.x, shift.y);
+      window.form.assignAddress(startCoords.x, startCoords.y);
+
+    };
+
+    var mouseUpHandler = function (upEvt) {
+      upEvt.preventDefault();
+
+      window.map.movementArea.removeEventListener('mousemove', mouseMoveHandler);
+      window.map.movementArea.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    window.map.movementArea.addEventListener('mousemove', mouseMoveHandler);
+    window.map.movementArea.addEventListener('mouseup', mouseUpHandler);
+  };
+  window.utils = {
+    getRandomNumber: getRandomNumber,
+    getRandomElement: getRandomElement,
+    getRandomElementNoRepeat: getRandomElementNoRepeat,
+    getRandomArray: getRandomArray,
+    mouseMovementHandler: mouseMovementHandler
+  };
+
 })();
