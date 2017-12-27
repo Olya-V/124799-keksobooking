@@ -70,8 +70,8 @@
         };
 
         var elementStopCoords = {
-          x: null,
-          y: null
+          x: 0,
+          y: 0
         };
 
         if ((elementCoords.y) <= window.map.dragLimits.yMin ||
@@ -79,8 +79,8 @@
           (elementCoords.x) <= window.map.dragLimits.xMin ||
           (elementCoords.x) >= window.map.dragLimits.xMax) {
 
-          elementStopCoords.y = Math.min(Math.max(elementCoords.y, window.map.yMin), window.map.yMax);
-          elementStopCoords.x = Math.max(Math.min(window.map.xMax, elementCoords.x), window.map.xMin);
+          elementStopCoords.y = Math.min(Math.max(elementCoords.y, window.map.dragLimits.yMin), window.map.dragLimits.yMax);
+          elementStopCoords.x = Math.max(Math.min(window.map.dragLimits.xMax, elementCoords.x), window.map.dragLimits.xMin);
         } else {
           elementStopCoords.y = elementCoords.y;
           elementStopCoords.x = elementCoords.x;
