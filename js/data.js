@@ -33,9 +33,10 @@
     Y_MIN: 100,
     Y_MAX: 500
   };
-  var PIN_HEIGHT = 64;
-  var PIN_WIDTH = 46;
-
+  var PIN_CUSTOM = {
+    HEIGHT: 64,
+    WIDTH: 46
+  };
   /**
    * @description возвращает ссылку на аватарку автора объявления
    * @param {number} i индекс объекта объявления, max индекс задается числом создаваемых объектов
@@ -59,7 +60,7 @@
       },
       'offer': {
         'title': window.utils.getRandomElementNoRepeat(title),
-        'address': (coordinateX + PIN_WIDTH / 2) + ', ' + (coordinateY + PIN_HEIGHT),
+        'address': (coordinateX + PIN_CUSTOM.WIDTH / 2) + ', ' + (coordinateY + PIN_CUSTOM.HEIGHT),
         'price': window.utils.getRandomNumber(PRICE.MIN, PRICE.MAX),
         'type': window.utils.getRandomElement(Object.keys(type)),
         'rooms': window.utils.getRandomNumber(ROOMS.MIN, ROOMS.MAX),
@@ -90,7 +91,6 @@
     return offersArray;
   };
   window.data = {
-    location: LOCATION,
     map: map,
     type: type,
     getOffers: getOffersArray(OBJECT_COUNT)

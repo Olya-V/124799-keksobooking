@@ -1,9 +1,16 @@
 'use strict';
 
 (function () {
+  var PIN_MAIN = {
+    HEIGHT: 87,
+    WIDTH: 65
+  };
+  var PIN_LIMITS = {
+    Y_MIN: 100,
+    Y_MAX: 500
+  };
   var pinsBlock = document.querySelector('div.map__pins');
-  var mapPinMainKeks = document.querySelector('.map__pin--main');
-
+  var pinMain = document.querySelector('.map__pin--main');
   /**
    * @description создает DOM-элемен - пин
    * @param {object} offer объект обявление - элемент из массива объявлений @see offers
@@ -85,12 +92,16 @@
     window.map.showMap();
     window.form.activateForm();
     showPins();
-    mapPinMainKeks.removeEventListener('mouseup', keksPinClickHandler);
+    pinMain.removeEventListener('mouseup', keksPinClickHandler);
   };
 
-  mapPinMainKeks.addEventListener('mouseup', keksPinClickHandler);
+  pinMain.addEventListener('mouseup', keksPinClickHandler);
+  pinMain.addEventListener('mousedown', window.utils.mouseMovementHandler);
 
   window.pin = {
+    pinMain: pinMain,
+    pinMainParams: PIN_MAIN,
+    pinLimits: PIN_LIMITS,
     showPins: showPins,
     disablePin: disablePin
   };
