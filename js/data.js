@@ -60,7 +60,7 @@
       },
       'offer': {
         'title': window.utils.getRandomElementNoRepeat(title),
-        'address': (coordinateX + PIN_CUSTOM.WIDTH / 2) + ', ' + (coordinateY + PIN_CUSTOM.HEIGHT),
+        'address': coordinateX + ', ' + coordinateY,
         'price': window.utils.getRandomNumber(PRICE.MIN, PRICE.MAX),
         'type': window.utils.getRandomElement(Object.keys(type)),
         'rooms': window.utils.getRandomNumber(ROOMS.MIN, ROOMS.MAX),
@@ -72,8 +72,8 @@
         'photos': []
       },
       'location': {
-        'x': coordinateX,
-        'y': coordinateY
+        'x': coordinateX - PIN_CUSTOM.WIDTH / 2,
+        'y': coordinateY - PIN_CUSTOM.HEIGHT
       }
     };
   };
