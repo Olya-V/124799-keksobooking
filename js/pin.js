@@ -81,13 +81,14 @@
    * @description обработчик события клик по Кекс-пину
    * @constructor
    */
-  var KeksPinClickHandler = function () {
+  var keksPinClickHandler = function () {
     window.map.showMap();
     window.form.activateForm();
     showPins();
+    mapPinMainKeks.removeEventListener('mouseup', keksPinClickHandler);
   };
 
-  mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
+  mapPinMainKeks.addEventListener('mouseup', keksPinClickHandler);
 
   window.pin = {
     showPins: showPins,
