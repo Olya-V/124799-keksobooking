@@ -72,8 +72,8 @@
         'photos': []
       },
       'location': {
-        'x': coordinateX - PIN_CUSTOM.WIDTH / 2,
-        'y': coordinateY - PIN_CUSTOM.HEIGHT
+        'x': coordinateX + PIN_CUSTOM.WIDTH / 2,
+        'y': coordinateY + PIN_CUSTOM.HEIGHT
       }
     };
   };
