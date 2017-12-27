@@ -47,120 +47,57 @@
    * @param {number} y
    */
   var assignElementsCoords = function (element, x, y) {
-    element.style.left = (element.offsetLeft - x) + 'px';
-    element.style.top = (element.offsetTop - y) + 'px';
-  };
-
-  var assignFinalElementsCoords = function (element, x, y) {
     element.style.left = x + 'px';
     element.style.top = y + 'px';
   };
-  /**
-   * @description обработчик перемещения объекта мышью
-   * @param {object} evt
-   */
-  /*
-  var mouseMovementHandler = function (evt) {
-    evt.preventDefault();
 
-    var mouseMoveHandler = function (moveEvt) {
-      moveEvt.preventDefault();
+  var dragItem = function (element) {
 
-      var elementCoords = {
-        x: moveEvt.pageX - window.map.mapOffset,
-        y: moveEvt.pageY
+    element.addEventListener('mousedown', function (evt) {
+      evt.preventDefault();
+
+      var startCoords = {
+        x: evt.pageX - element.offsetLeft,
+        y: evt.pageY - element.offsetTop
       };
 
-      if (elementCoords.y <= window.map.yMin ||
-        elementCoords.y >= window.map.yMax ||
-        elementCoords.x <= window.map.xMin ||
-        elementCoords.x >= window.map.xMax) {
-        elementCoords.y = Math.min(Math.max(elementCoords.y, window.map.yMin), window.map.yMax);
-        elementCoords.x = Math.max(Math.min(window.map.xMax, elementCoords.x), window.map.xMin);
+      var mouseMoveHandler = function (moveEvt) {
+        moveEvt.preventDefault();
 
-        assignElementsCoords(window.map.elementToMove, elementCoords.x, elementCoords.y);
+        var elementCoords = {
+          x: moveEvt.pageX - startCoords.x,
+          y: moveEvt.pageY - startCoords.y
+        };
+
+        if ((elementCoords.y) < window.map.dragLimits.yMin ||
+          (elementCoords.y) > window.map.dragLimits.yMax ||
+          (elementCoords.x) < window.map.dragLimits.xMin ||
+          (elementCoords.x) > window.map.dragLimits.xMax) {
+
+          elementCoords.y = Math.min(Math.max(elementCoords.y, window.map.yMin), window.map.yMax);
+          elementCoords.x = Math.max(Math.min(window.map.xMax, elementCoords.x), window.map.xMin);
+        }
+        assignElementsCoords(element, elementCoords.x, elementCoords.y);
         window.form.assignAddress(elementCoords.x, elementCoords.y);
+      };
+
+      var mouseUpHandler = function (upEvt) {
+        upEvt.preventDefault();
 
         window.map.movementArea.removeEventListener('mousemove', mouseMoveHandler);
         window.map.movementArea.removeEventListener('mouseup', mouseUpHandler);
-      }
+      };
 
-      assignElementsCoords(window.map.elementToMove, elementCoords.x, elementCoords.y);
-      window.form.assignAddress(elementCoords.x, elementCoords.y);
-
-    };
-
-    var mouseUpHandler = function (upEvt) {
-      upEvt.preventDefault();
-
-      window.map.movementArea.removeEventListener('mousemove', mouseMoveHandler);
-      window.map.movementArea.removeEventListener('mouseup', mouseUpHandler);
-    };
-
-    window.map.movementArea.addEventListener('mousemove', mouseMoveHandler);
-    window.map.movementArea.addEventListener('mouseup', mouseUpHandler);
+      window.map.movementArea.addEventListener('mousemove', mouseMoveHandler);
+      window.map.movementArea.addEventListener('mouseup', mouseUpHandler);
+    });
   };
+
   window.utils = {
     getRandomNumber: getRandomNumber,
     getRandomElement: getRandomElement,
     getRandomElementNoRepeat: getRandomElementNoRepeat,
     getRandomArray: getRandomArray,
-    mouseMovementHandler: mouseMovementHandler
+    dragItem: dragItem
   };
-  */
-
-  var mouseMovementHandler = function (evt) {
-    evt.preventDefault();
-
-    var startCoords = {
-      x: evt.pageX,
-      y: evt.pageY
-    };
-
-    var mouseMoveHandler = function (moveEvt) {
-      moveEvt.preventDefault();
-      var shift = {
-        x: startCoords.x - moveEvt.pageX,
-        y: startCoords.y - moveEvt.pageY
-      };
-      startCoords = {
-        x: moveEvt.pageX,
-        y: moveEvt.pageY
-      };
-
-      // console.log(startCoords.x, startCoords.y);
-      // console.log(moveEvt);
-
-      if ((startCoords.y) <= window.map.yMin ||
-        (startCoords.y) >= window.map.yMax ||
-        (startCoords.x) <= window.map.xMin ||
-        (startCoords.x) >= window.map.xMax) {
-
-        window.map.movementArea.removeEventListener('mousemove', mouseMoveHandler);
-        window.map.movementArea.removeEventListener('mouseup', mouseUpHandler);
-      }
-
-      assignElementsCoords(window.map.elementToMove, shift.x, shift.y);
-      window.form.assignAddress(startCoords.x, startCoords.y);
-
-    };
-
-    var mouseUpHandler = function (upEvt) {
-      upEvt.preventDefault();
-
-      window.map.movementArea.removeEventListener('mousemove', mouseMoveHandler);
-      window.map.movementArea.removeEventListener('mouseup', mouseUpHandler);
-    };
-
-    window.map.movementArea.addEventListener('mousemove', mouseMoveHandler);
-    window.map.movementArea.addEventListener('mouseup', mouseUpHandler);
-  };
-  window.utils = {
-    getRandomNumber: getRandomNumber,
-    getRandomElement: getRandomElement,
-    getRandomElementNoRepeat: getRandomElementNoRepeat,
-    getRandomArray: getRandomArray,
-    mouseMovementHandler: mouseMovementHandler
-  };
-
 })();

@@ -1,13 +1,15 @@
 'use strict';
 
 (function () {
-  var mapOffset = document.querySelector('section.map').offsetLeft;
-  var yMin = window.pin.pinLimits.Y_MIN;
-  var yMax = window.pin.pinLimits.Y_MAX;
-  var xMin = mapOffset + (window.pin.pinMainParams.WIDTH);
-  var xMax = (document.documentElement.clientWidth - mapOffset - (window.pin.pinMainParams.WIDTH));
-  var movementArea = window.data.map;
   var elementToMove = window.pin.pinMain;
+  var dragLimits = {
+    yMin: window.pin.pinLimits.Y_MIN,
+    yMax: window.pin.pinLimits.Y_MAX,
+    xMin: window.pin.pinMainParams.WIDTH / 2,
+    xMax: elementToMove.parentNode.offsetWidth - window.pin.pinMainParams.WIDTH / 2
+  };
+  var movementArea = window.data.map;
+
   /**
    * @description затемняет блок .map
    */
@@ -22,12 +24,9 @@
   };
 
   fadeMap();
+  window.utils.dragItem(window.pin.pinMain);
   window.map = {
-    mapOffset: mapOffset,
-    yMin: yMin,
-    yMax: yMax,
-    xMin: xMin,
-    xMax: xMax,
+    dragLimits: dragLimits,
     movementArea: movementArea,
     elementToMove: elementToMove,
     showMap: showMap
