@@ -102,12 +102,21 @@
       window.map.movementArea.addEventListener('mouseup', mouseUpHandler);
     });
   };
+  var syncValues = function (element, value) {
+    element.value = value;
+  };
+
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
+  };
 
   window.utils = {
     getRandomNumber: getRandomNumber,
     getRandomElement: getRandomElement,
     getRandomElementNoRepeat: getRandomElementNoRepeat,
     getRandomArray: getRandomArray,
-    dragItem: dragItem
+    dragItem: dragItem,
+    syncValues: syncValues,
+    syncValueWithMin: syncValueWithMin
   };
 })();

@@ -12,10 +12,10 @@
   var fields = document.querySelectorAll('form.notice__form fieldset');
   var address = document.querySelector('#address');
   var title = document.querySelector('#title');
-  var price = document.querySelector('#price');
-  var timeIn = document.querySelector('#timein');
-  var timeOut = document.querySelector('#timeout');
-  var type = document.querySelector('#type');
+  var checkinTime = document.querySelector('#timein');
+  var checkoutTime = document.querySelector('#timeout');
+  var apartmentType = document.querySelector('#type');
+  var pricePerNight = document.querySelector('#price');
   var rooms = document.querySelector('#room_number');
   var guests = document.querySelector('#capacity');
 
@@ -35,63 +35,36 @@
   /**
    * @description выводит комментарии, если поле Цена не заполненно или заполнено неверно
    */
-  price.addEventListener('invalid', function () {
-    if (price.value === '' || price.validity.valueMissing) {
-      price.setCustomValidity('Это обязательное поле. Введите число.');
-    } else if (price.validity.rangeUnderflow) {
-      price.setCustomValidity('Минимальное значение цены - ' + price.min);
-    } else if (price.validity.rangeOverflow) {
-      price.setCustomValidity('Максимальное значение цены - ' + price.max);
+  pricePerNight.addEventListener('invalid', function () {
+    if (pricePerNight.value === '' || pricePerNight.validity.valueMissing) {
+      pricePerNight.setCustomValidity('Это обязательное поле. Введите число.');
+    } else if (pricePerNight.validity.rangeUnderflow) {
+      pricePerNight.setCustomValidity('Минимальное значение цены - ' + pricePerNight.min);
+    } else if (pricePerNight.validity.rangeOverflow) {
+      pricePerNight.setCustomValidity('Максимальное значение цены - ' + pricePerNight.max);
     } else {
-      price.setCustomValidity('');
+      pricePerNight.setCustomValidity('');
     }
   });
-
-  /**
-   * @description при выборе время заезда синхронизирует время выезда
-   */
-  timeIn.addEventListener('change', function () {
-    timeOut.options[timeIn.options.selectedIndex].selected = true;
-  });
-
-  /**
-   * @description при выборе время выезда синхронизирует время заезда
-   */
-  timeOut.addEventListener('change', function () {
-    timeIn.options[timeOut.options.selectedIndex].selected = true;
-  });
-
   /**
    * @description назначает минимальную цену в зависимости от отмеченного атрибутом selected в HTML типа жилья
    */
   var setPriceForSelectedType = function () {
-    switch (type.options.selectedIndex) {
+    switch (apartmentType.options.selectedIndex) {
       case 0:
-        price.setAttribute('min', APPARTMENT_MIN_PRICE);
+        pricePerNight.setAttribute('min', APPARTMENT_MIN_PRICE);
         break;
       case 1:
-        price.setAttribute('min', SHACK_MIN_PRICE);
+        pricePerNight.setAttribute('min', SHACK_MIN_PRICE);
         break;
       case 2:
-        price.setAttribute('min', HOUSE_MIN_PRICE);
+        pricePerNight.setAttribute('min', HOUSE_MIN_PRICE);
         break;
       case 3:
-        price.setAttribute('min', PALACE_MIN_PRICE);
+        pricePerNight.setAttribute('min', PALACE_MIN_PRICE);
         break;
     }
   };
-
-  setPriceForSelectedType();
-
-  var TypeChangeHandler = function () {
-    setPriceForSelectedType();
-  };
-
-  /**
-   * @description при выборе в форме типа жилья синхронизирует минимальную цену
-   */
-  type.addEventListener('change', TypeChangeHandler);
-
   /**
    * @description синхронизирует кол-во гостей в зависимости от отмеченного атрибутом selected в HTML кол-ва комнат
    */
@@ -111,24 +84,11 @@
         break;
     }
   };
-
-  setRoomsForSelectedType();
-
-  var RoomChangeHandler = function () {
-    setRoomsForSelectedType();
-  };
-
-  /**
-   * @description при выборе кол-ва комнат в форме синхронизирует кол-во гостей
-   */
-  rooms.addEventListener('change', RoomChangeHandler);
-
-
   /**
    * @description проверяет перед отправкой формы input-ы
    */
   form.addEventListener('submit', function (evt) {
-    var inputs = [title, price, address];
+    var inputs = [title, pricePerNight, address];
 
     for (var w = 0; w < inputs.length; w++) {
       if (!inputs[w].validity.valid || inputs[w].value === '') {
@@ -181,6 +141,11 @@
   };
 
   disableForm();
+  setPriceForSelectedType();
+  setRoomsForSelectedType();
+  window.synchronizeFields(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
+  window.synchronizeFields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
+  window.synchronizeFields(rooms, guests, ['1', '2', '3', '100'], ['1', '2', '3', '0'], window.utils.syncValues);
   window.form = {
     activateForm: activateForm,
     assignAddress: assignAddress
