@@ -92,7 +92,7 @@
   document.addEventListener('keydown', popupEscKeydownHandler);
 
   window.card = {
-    popup: createPopup,
+    createPopup: createPopup,
     setFocus: setFocus,
     deleteOpenedPopup: deleteOpenedPopup
   };

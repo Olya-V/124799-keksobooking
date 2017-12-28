@@ -13,7 +13,7 @@
   var address = document.querySelector('#address');
   var title = document.querySelector('#title');
   var price = document.querySelector('#price');
-  var timeInt = document.querySelector('#timein');
+  var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
   var type = document.querySelector('#type');
   var rooms = document.querySelector('#room_number');
@@ -50,15 +50,15 @@
   /**
    * @description при выборе время заезда синхронизирует время выезда
    */
-  timeInt.addEventListener('change', function () {
-    timeOut.options[timeInt.options.selectedIndex].selected = true;
+  timeIn.addEventListener('change', function () {
+    timeOut.options[timeIn.options.selectedIndex].selected = true;
   });
 
   /**
    * @description при выборе время выезда синхронизирует время заезда
    */
   timeOut.addEventListener('change', function () {
-    timeInt.options[timeOut.options.selectedIndex].selected = true;
+    timeIn.options[timeOut.options.selectedIndex].selected = true;
   });
 
   /**
