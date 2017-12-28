@@ -2,14 +2,13 @@
 
 (function () {
   var elementToMove = window.pin.pinMain;
+  var movementArea = window.data.map;
   var dragLimits = {
     yMin: window.pin.pinLimits.Y_MIN,
     yMax: window.pin.pinLimits.Y_MAX,
     xMin: window.pin.pinMainParams.WIDTH / 2,
     xMax: elementToMove.parentNode.offsetWidth - window.pin.pinMainParams.WIDTH / 2
   };
-  var movementArea = window.data.map;
-
   /**
    * @description затемняет блок .map
    */
@@ -26,6 +25,7 @@
   fadeMap();
   window.utils.dragItem(elementToMove);
   window.map = {
+    elementToMove: elementToMove,
     dragLimits: dragLimits,
     movementArea: movementArea,
     showMap: showMap

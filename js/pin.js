@@ -100,7 +100,6 @@
     pinMain: pinMain,
     pinMainParams: PIN_MAIN,
     pinLimits: PIN_LIMITS,
-    showPins: showPins,
     disablePin: disablePin
   };
 })();

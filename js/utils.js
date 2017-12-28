@@ -41,7 +41,7 @@
   };
 
   /**
-   * @description назначает координаты элементу
+   * @description назначает координаты элементу при перемещении
    * @param {*} element перемещаемый DOM-элемент
    * @param {number} x
    * @param {number} y
@@ -51,29 +51,31 @@
     element.style.top = y + 'px';
   };
 
+  /**
+   * @description перетаскивает элемент в заданых на карте границах
+   * @param {*} element перетаскиваемый DOM-элемент
+   */
   var dragItem = function (element) {
-
     element.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
-
-      var startCoords = {
+      // по точке клика находим смещение до левого верхнего угла элемента
+      var clickOffset = {
         x: evt.pageX - element.offsetLeft,
         y: evt.pageY - element.offsetTop
       };
 
       var mouseMoveHandler = function (moveEvt) {
         moveEvt.preventDefault();
-
+        // для определения координат элемента при перемещении мышкой отнимаем смещение
         var elementCoords = {
-          x: moveEvt.pageX - startCoords.x,
-          y: moveEvt.pageY - startCoords.y
+          x: moveEvt.pageX - clickOffset.x,
+          y: moveEvt.pageY - clickOffset.y
         };
 
         var elementStopCoords = {
           x: 0,
           y: 0
         };
-
         if ((elementCoords.y) <= window.map.dragLimits.yMin ||
           (elementCoords.y) >= window.map.dragLimits.yMax ||
           (elementCoords.x) <= window.map.dragLimits.xMin ||

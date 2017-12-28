@@ -172,7 +172,7 @@
   };
 
   /**
-   * @description отображате адрес в поле
+   * @description отображате адрес в поле - координата острого конца метки
    * @param {number} x
    * @param {number} y
    */
@@ -182,10 +182,7 @@
 
   disableForm();
   window.form = {
-    activateFields: activateFields,
     activateForm: activateForm,
-    assignAddress: assignAddress,
-    disableFields: disableFields,
-    disableForm: disableForm
+    assignAddress: assignAddress
   };
 })();
