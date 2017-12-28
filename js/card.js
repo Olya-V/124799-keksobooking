@@ -22,6 +22,7 @@
   /**
    * @description отрисовывает новый DOM-элемен popup перед .map__filters-container
    * @param {object} offerObject объект обявление -  один элемент из массива объявлений @see offers
+   * @return {*} fragment с карточкой объявления
    */
   var createPopup = function (offerObject) {
     var fragmentAd = document.createDocumentFragment();
