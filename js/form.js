@@ -171,11 +171,18 @@
     activateFields();
   };
 
+  /**
+   * @description отображате адрес в поле - координата острого конца метки
+   * @param {number} x
+   * @param {number} y
+   */
+  var assignAddress = function (x, y) {
+    address.value = 'x: ' + (x + (window.pin.pinMainParams.WIDTH / 2)) + ', y: ' + (y + window.pin.pinMainParams.HEIGHT);
+  };
+
   disableForm();
   window.form = {
-    disableFields: disableFields,
-    disableForm: disableForm,
-    activateFields: activateFields,
-    activateForm: activateForm
+    activateForm: activateForm,
+    assignAddress: assignAddress
   };
 })();

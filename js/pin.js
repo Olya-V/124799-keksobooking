@@ -1,9 +1,16 @@
 'use strict';
 
 (function () {
+  var PIN_MAIN = {
+    HEIGHT: 87,
+    WIDTH: 65
+  };
+  var PIN_LIMITS = {
+    Y_MIN: 100,
+    Y_MAX: 500
+  };
   var pinsBlock = document.querySelector('div.map__pins');
-  var mapPinMainKeks = document.querySelector('.map__pin--main');
-
+  var pinMain = document.querySelector('.map__pin--main');
   /**
    * @description создает DOM-элемен - пин
    * @param {object} offer объект обявление - элемент из массива объявлений @see offers
@@ -81,16 +88,18 @@
    * @description обработчик события клик по Кекс-пину
    * @constructor
    */
-  var KeksPinClickHandler = function () {
+  var keksPinClickHandler = function () {
     window.map.showMap();
     window.form.activateForm();
     showPins();
+    pinMain.removeEventListener('mouseup', keksPinClickHandler);
   };
 
-  mapPinMainKeks.addEventListener('mouseup', KeksPinClickHandler);
-
+  pinMain.addEventListener('mouseup', keksPinClickHandler);
   window.pin = {
-    showPins: showPins,
+    pinMain: pinMain,
+    pinMainParams: PIN_MAIN,
+    pinLimits: PIN_LIMITS,
     disablePin: disablePin
   };
 })();

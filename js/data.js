@@ -27,10 +27,14 @@
     MIN: 1,
     MAX: 100
   };
+  var PIN_CUSTOM = {
+    HEIGHT: 64,
+    WIDTH: 46
+  };
   var LOCATION = {
     X_MIN: 300,
     X_MAX: 900,
-    Y_MIN: 164,
+    Y_MIN: 100,
     Y_MAX: 500
   };
 
@@ -69,8 +73,8 @@
         'photos': []
       },
       'location': {
-        'x': coordinateX,
-        'y': coordinateY
+        'x': coordinateX + PIN_CUSTOM.WIDTH / 2,
+        'y': coordinateY + PIN_CUSTOM.HEIGHT
       }
     };
   };

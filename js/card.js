@@ -94,8 +94,6 @@
   window.card = {
     popup: createPopup,
     setFocus: setFocus,
-    deleteOpenedPopup: deleteOpenedPopup,
-    closeButtonClickHandler: closeButtonClickHandler,
-    popupEscKeydownHandler: popupEscKeydownHandler
+    deleteOpenedPopup: deleteOpenedPopup
   };
 })();
