@@ -34,12 +34,13 @@ element1.addEventListener('change', function () {
     // document.querySelector('#timeout [value="12:00"]')
 
     for (var i = 0; i < element.options.length; i++) {
-      if (element.options[i].value === value)
+      if (element.options[i].value === value) {
+        element.options[i].selected = true;
+      } else {
+        element.options[i].selected = false;
+      }
     }
-
   };
-
-
 
   window.synchronizeFields = function (element1, element2, arrayOfValue1, arrayOfValue2, callback) {
     element1.addEventListener('change', callback(element2, arrayOfValue2));

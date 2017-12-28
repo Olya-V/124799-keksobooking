@@ -32,11 +32,11 @@
    * @param {object} evt
    */
   var pinClickHandler = function (evt) {
-    console.log(evt);
     disablePin();
     window.card.deleteOpenedPopup();
-    window.card.createPopup(window.data.getOffers[activatePin(evt)]);
-    window.card.setFocus();
+    var index = activatePin(evt);
+    var offer = window.data.getOffers[index];
+    window.showCard(offer);
   };
 
   /**
