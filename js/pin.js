@@ -34,8 +34,9 @@
   var pinClickHandler = function (evt) {
     disablePin();
     window.card.deleteOpenedPopup();
-    window.card.popup(window.data.getOffers[activatePin(evt)]);
-    window.card.setFocus();
+    var index = activatePin(evt);
+    var offer = window.data.getOffers[index];
+    window.showCard(offer);
   };
 
   /**
@@ -66,7 +67,7 @@
   /**
    * @description активирует пин при нажатии (пин подсвечивается)
    * @param {object} evt
-   * @return {object} активный пин (button), по которому кликнули/нажали
+   * @return {object} id активного пина (button), по которому кликнули/нажали
    */
   var activatePin = function (evt) {
     var activePin = evt.currentTarget;

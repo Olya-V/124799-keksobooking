@@ -22,12 +22,12 @@
   /**
    * @description отрисовывает новый DOM-элемен popup перед .map__filters-container
    * @param {object} offerObject объект обявление -  один элемент из массива объявлений @see offers
+   * @return {*} fragment с карточкой объявления
    */
   var createPopup = function (offerObject) {
+    var fragmentAd = document.createDocumentFragment();
     var templateAd = document.querySelector('template').content.querySelector('article.map__card');
     var elementAd = templateAd.cloneNode(true);
-    var fragmentAd = document.createDocumentFragment();
-    var mapFilters = document.querySelector('.map__filters-container');
     elementAd.querySelector('img').src = offerObject.author.avatar;
     elementAd.querySelector('h3').innerHTML = offerObject.offer.title;
     elementAd.querySelector('small').innerHTML = offerObject.offer.address;
@@ -41,7 +41,7 @@
     var featuresList = offerObject.offer.features;
     changeFeatures(featuresList, templateFeaturesList);
     fragmentAd.appendChild(elementAd);
-    window.data.map.insertBefore(fragmentAd, mapFilters);
+    return fragmentAd;
   };
 
   /**
@@ -92,7 +92,7 @@
   document.addEventListener('keydown', popupEscKeydownHandler);
 
   window.card = {
-    popup: createPopup,
+    createPopup: createPopup,
     setFocus: setFocus,
     deleteOpenedPopup: deleteOpenedPopup
   };
