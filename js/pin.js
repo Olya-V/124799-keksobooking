@@ -26,33 +26,35 @@
 
     return elementPin;
   };
-
   /**
-   * @description обработчик клика по пину.
-   * @param {object} evt
+   * @description получает данные о схожих объявлениях с сервера
+   * @param {array} offers массив данных с сервера со схожими объявлениями
    */
-  var pinClickHandler = function (evt) {
-    disablePin();
-    window.card.deleteOpenedPopup();
-    var index = activatePin(evt);
-    var offer = window.data.getOffers[index];
-    window.showCard(offer);
+  var successHandler = function (offers) {
+    var offersArray = offers;
+    /**
+     * @description обработчик клика по пину.
+     * @param {object} evt
+     */
+    var pinClickHandler = function (evt) {
+      disablePin();
+      window.card.deleteOpenedPopup();
+      window.showCard(offersArray[activatePin(evt)]);
+    };
+    /**
+     * создает пины на основе объекта объявление ,
+     * пины отрисовываются в блоке .map__pins
+     */
+    var fragmentPins = document.createDocumentFragment();
+    for (var k = 0; k < offersArray.length; k++) {
+      var newPin = createPin(offersArray[k]);
+      newPin.classList.add('hidden');
+      newPin.setAttribute('data-id', k);
+      newPin.addEventListener('click', pinClickHandler);
+      fragmentPins.appendChild(newPin);
+    }
+    pinsBlock.appendChild(fragmentPins);
   };
-
-  /**
-   * создает пины на основе объекта объявление - элемент массива @see offers во fragment,
-   * пины отрисовываются в блоке .map__pins
-   */
-  var fragmentPins = document.createDocumentFragment();
-  for (var k = 0; k < window.data.getOffers.length; k++) {
-    var newPin = createPin(window.data.getOffers[k]);
-    newPin.classList.add('hidden');
-    newPin.setAttribute('data-id', k);
-    newPin.addEventListener('click', pinClickHandler);
-    fragmentPins.appendChild(newPin);
-  }
-  pinsBlock.appendChild(fragmentPins);
-
   /**
    * @description убирает класс .hidden у пинов,
    */
@@ -95,7 +97,7 @@
     showPins();
     pinMain.removeEventListener('mouseup', keksPinClickHandler);
   };
-
+  window.backend.download(successHandler, window.utils.errorHandler);
   pinMain.addEventListener('mouseup', keksPinClickHandler);
   window.pin = {
     pinMain: pinMain,

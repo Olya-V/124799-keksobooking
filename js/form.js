@@ -96,6 +96,10 @@
         evt.preventDefault();
       }
     }
+    window.backend.upload(new FormData(form), function () {
+      form.reset();
+    }, window.utils.errorHandler);
+    evt.preventDefault();
   }, false);
 
   /**
