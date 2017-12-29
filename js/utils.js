@@ -2,45 +2,6 @@
 
 (function () {
   /**
-   * @description возвращает случайное число от min до max, всключая max
-   * @param {number} min
-   * @param {number} max
-   * @return {number} случайное число
-   */
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max - min));
-  };
-
-  /**
-   * @description возвращает случайный элемент массива по рандомному индексу, элементы могут повторяться
-   * @param {array} arrayOfElements
-   * @return {*} рандомный элемент массива
-   */
-  var getRandomElement = function (arrayOfElements) {
-    var randomIndex = getRandomNumber(0, arrayOfElements.length - 1);
-    return arrayOfElements[randomIndex];
-  };
-
-  /**
-   * @description возвращает случайный элемент массива по рандомному индексу, элементы не повторяются
-   * @param {array} arrayOfElements
-   * @return {*} рандомный элемент массива
-   */
-  var getRandomElementNoRepeat = function (arrayOfElements) {
-    var randomIndex = getRandomNumber(0, arrayOfElements.length - 1);
-    return arrayOfElements.splice(randomIndex, 1);
-  };
-
-  /**
-   * @description возвращает массив случайной длинны исходя из переданного массива
-   * @param {array} arrayOfElements исходный массив данных
-   * @return {array} новый массив
-   */
-  var getRandomArray = function (arrayOfElements) {
-    return arrayOfElements.slice(getRandomNumber(1, arrayOfElements.length - 1));
-  };
-
-  /**
    * @description назначает координаты элементу при перемещении
    * @param {*} element перемещаемый DOM-элемент
    * @param {number} x
@@ -109,14 +70,30 @@
   var syncValueWithMin = function (element, value) {
     element.min = value;
   };
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    var message = document.createElement('p');
+    node.style.zIndex = 100;
+    node.style.margin = '0 auto';
+    node.style.backgroundColor = 'rgba(255,255,255, 0.8)';
+    node.style.textAlign = 'center';
+    node.style.position = 'absolute';
+    node.style.width = '550px';
+    node.style.height = '550px';
+    node.style.borderRadius = '50%';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '50px';
+    message.style.paddingTop = '180px';
+    message.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+    node.appendChild(message);
+  };
 
   window.utils = {
-    getRandomNumber: getRandomNumber,
-    getRandomElement: getRandomElement,
-    getRandomElementNoRepeat: getRandomElementNoRepeat,
-    getRandomArray: getRandomArray,
     dragItem: dragItem,
     syncValues: syncValues,
-    syncValueWithMin: syncValueWithMin
+    syncValueWithMin: syncValueWithMin,
+    errorHandler: errorHandler
   };
 })();
