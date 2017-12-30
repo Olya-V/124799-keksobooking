@@ -76,15 +76,21 @@ housingGuests.addEventListener('change', function () {
   window.debounce(filtersChangeHandler);
 });
 
+/**
+ * @description формирует новый массив фич по выбранным в фильтре
+ */
+var selectFeatures = function () {
+  housingFeatures.reduce(function (accumulator, item) {
+    if (item.checked === true) {
+      accumulator.push(item.value);
+    }
+    return accumulator;
+  }, []);
+};
+
 housingFeatures.forEach(function (value) {
   value.addEventListener('change', function () {
-
-    filters.features = housingFeatures.reduce(function (accumulator, item) {
-      if (item.checked === true) {
-        accumulator.push(item.value);
-      }
-      return accumulator;
-    }, []);
+    filters.features = selectFeatures();
     window.debounce(filtersChangeHandler);
   });
 });
