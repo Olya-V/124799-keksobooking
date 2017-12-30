@@ -51,6 +51,7 @@ var filterOffers = function (offersElements, filtersObject) {
  * @description обработчик измениня значений фильтров
  */
 var filtersChangeHandler = function () {
+  window.card.remove();
   window.pin.remove();
   var filteredOffers = filterOffers(window.data.offers, filters);
   window.pin.render(filteredOffers);
