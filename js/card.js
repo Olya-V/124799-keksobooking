@@ -88,12 +88,11 @@
     }
   };
 
-  document.addEventListener('click', closeButtonClickHandler);
-
   window.card = {
     create: create,
     setFocus: setFocus,
     remove: remove,
-    popupEscKeydownHandler: popupEscKeydownHandler
+    popupEscKeydownHandler: popupEscKeydownHandler,
+    closeButtonClickHandler: closeButtonClickHandler
   };
 })();

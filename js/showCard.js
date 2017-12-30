@@ -10,6 +10,7 @@
     var ad = window.card.create(offerObject);
     window.data.map.insertBefore(ad, mapFilters);
     window.card.setFocus();
+    document.addEventListener('click', window.card.closeButtonClickHandler);
     document.addEventListener('keydown', window.card.popupEscKeydownHandler);
   };
 
