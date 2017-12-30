@@ -147,9 +147,9 @@
   disableForm();
   setPriceForSelectedType();
   setRoomsForSelectedType();
-  window.synchronizeFields(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronizeFields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
-  window.synchronizeFields(rooms, guests, ['1', '2', '3', '100'], ['1', '2', '3', '0'], window.utils.syncValues);
+  window.synchronizeFields.call(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
+  window.synchronizeFields.call(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
+  window.synchronizeFields.call(rooms, guests, ['1', '2', '3', '100'], ['1', '2', '3', '0'], window.utils.syncValues);
   window.form = {
     activateForm: activateForm,
     assignAddress: assignAddress

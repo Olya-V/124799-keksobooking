@@ -16,7 +16,7 @@
    * @param {object} offer одно обявление
    * @return {Node} новую DOM-ноду - пин
    */
-  var createPin = function (offer) {
+  var create = function (offer) {
     var templatePin = document.querySelector('template').content.querySelector('button.map__pin');
     var elementPin = templatePin.cloneNode(true);
 
@@ -26,32 +26,23 @@
 
     return elementPin;
   };
-  // сохраним данные после загрузки
-  var offers = [];
   /**
-   * @description получает данные о схожих объявлениях с сервера
-   * @param {Array} data массив данных с сервера со схожими объявлениями
+   * @description отрисовывает пины с обработчиком клика на основе загруженных объявлений
+   * @param {*} offersElements
    */
-  var successHandler = function (data) {
-    offers = data;
-  };
-
-  var renderPins = function (offersElements) {
+  var render = function (offersElements) {
     /**
      * @description обработчик клика по пину.
      * @param {object} evt
      */
     var pinClickHandler = function (evt) {
-      disablePin();
-      window.card.deleteOpenedPopup();
-      window.showCard(offersElements[activatePin(evt)]);
+      disable();
+      window.card.remove();
+      window.showCard.call(offersElements[activate(evt)]);
     };
-    /**
-     * @description отрисовывает пины на основе загруженных объявлений в блоке .map__pins
-     */
     var fragmentPins = document.createDocumentFragment();
     for (var k = 0; k < offersElements.length && k < 5; k++) {
-      var newPin = createPin(offersElements[k]);
+      var newPin = create(offersElements[k]);
       newPin.setAttribute('data-id', k);
       newPin.addEventListener('click', pinClickHandler);
       fragmentPins.appendChild(newPin);
@@ -59,20 +50,21 @@
     pinsBlock.appendChild(fragmentPins);
   };
 
-  var deletePins = function () {
+  /**
+   * @description удлаяет отрисованные пины
+   */
+  var remove = function () {
     var pins = document.querySelectorAll('.map__pin[data-id]');
     Array.from(pins).forEach(function (value) {
       value.remove();
     });
   };
-
-
   /**
    * @description активирует пин при нажатии (пин подсвечивается)
    * @param {object} evt
    * @return {object} id активного пина (button), по которому кликнули/нажали
    */
-  var activatePin = function (evt) {
+  var activate = function (evt) {
     var activePin = evt.currentTarget;
     activePin.classList.add('map__pin--active');
     return activePin.dataset.id;
@@ -81,7 +73,7 @@
   /**
    * @description деактивирует пины, которые были активны (убирает подсветку)
    */
-  var disablePin = function () {
+  var disable = function () {
     var activePin = document.querySelector('.map__pin--active');
     if (activePin) {
       activePin.classList.remove('map__pin--active');
@@ -89,110 +81,23 @@
   };
 
   /**
-   * @description обработчик события клик по Кекс-пину
+   * @description обработчик события клик по главному пину
    * @constructor
    */
-  var keksPinClickHandler = function () {
+  var MainPinClickHandler = function () {
     window.map.showMap();
     window.form.activateForm();
-    renderPins(offers);
-    pinMain.removeEventListener('mouseup', keksPinClickHandler);
+    render(window.data.offers);
+    pinMain.removeEventListener('mouseup', MainPinClickHandler);
   };
-  window.backend.download(successHandler, window.utils.errorHandler);
-  pinMain.addEventListener('mouseup', keksPinClickHandler);
+  window.backend.download(window.utils.successHandler, window.utils.errorHandler);
+  pinMain.addEventListener('mouseup', MainPinClickHandler);
   window.pin = {
     pinMain: pinMain,
     pinMainParams: PIN_MAIN,
     pinLimits: PIN_LIMITS,
-    disablePin: disablePin
+    disablePin: disable,
+    remove: remove,
+    render: render
   };
-
-  // Ф И Л Ь Т Р Ы
-  var filters = {
-    type: 'any',
-    price: 'any',
-    rooms: 'any',
-    guests: 'any',
-    features: []
-  };
-
-  var filterOffers = function (offersElements, filtersObject) {
-    var newOffers = offersElements.filter(function (item) {
-
-      var filteredByFeatures = true;
-
-      for (var i = 0; i < filtersObject.features.length; i++) {
-        if (item.offer.features.indexOf(filtersObject.features[i]) === -1) {
-          filteredByFeatures = false;
-          break;
-        }
-      }
-
-      var filteredByPrice = (
-        (item.offer.price < 10000 && filtersObject.price === 'low') ||
-        (item.offer.price >= 10000 && item.offer.price <= 50000 && filtersObject.price === 'middle') ||
-        (item.offer.price > 50000 && filtersObject.price === 'high') ||
-        filtersObject.price === 'any');
-
-
-      return ((item.offer.type === filtersObject.type || filtersObject.type === 'any') &&
-        filteredByPrice &&
-        (item.offer.rooms.toString() === filtersObject.rooms || filtersObject.rooms === 'any') &&
-        (item.offer.guests.toString() === filtersObject.guests || filtersObject.guests === 'any') &&
-        filteredByFeatures);
-    });
-    return newOffers.slice(0, 4);
-  };
-
-  var filtersChangeHandler = function () {
-    deletePins();
-    var filteredOffers = filterOffers(offers, filters);
-    renderPins(filteredOffers);
-  };
-
-
-  var housingType = document.querySelector('#housing-type');
-  housingType.addEventListener('change', function () {
-    filters.type = housingType.value;
-    console.log('type: ' + filters.type);
-    window.debounce(filtersChangeHandler);
-  });
-
-  var housingPrice = document.querySelector('#housing-price');
-  housingPrice.addEventListener('change', function () {
-    filters.price = housingPrice.value;
-    console.log('price: ' + filters.price);
-    window.debounce(filtersChangeHandler);
-  });
-
-  var housingRooms = document.querySelector('#housing-rooms');
-  housingRooms.addEventListener('change', function () {
-    filters.rooms = housingRooms.value;
-    console.log('rooms: ' + filters.rooms);
-    window.debounce(filtersChangeHandler);
-  });
-
-
-  var housingGuests = document.querySelector('#housing-guests');
-  housingGuests.addEventListener('change', function () {
-    filters.guests = housingGuests.value;
-    console.log('guests: ' + filters.guests);
-    window.debounce(filtersChangeHandler);
-  });
-
-  var housingFeatures = Array.from(document.querySelectorAll('#housing-features input'));
-
-  housingFeatures.forEach(function (value) {
-    value.addEventListener('change', function () {
-
-      filters.features = housingFeatures.reduce(function (accumulator, item) {
-        if (item.checked === true) {
-          accumulator.push(item.value);
-        }
-        return accumulator;
-      }, []);
-      console.log('features: ' + filters.features);
-      window.debounce(filtersChangeHandler);
-    });
-  });
 })();
