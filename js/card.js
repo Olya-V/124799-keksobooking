@@ -61,6 +61,7 @@
 
     if (openedPopup) {
       window.data.map.removeChild(openedPopup);
+      document.removeEventListener('keydown', closeButtonClickHandler);
     }
   };
 
@@ -89,11 +90,10 @@
 
   document.addEventListener('click', closeButtonClickHandler);
 
-  document.addEventListener('keydown', popupEscKeydownHandler);
-
   window.card = {
     create: create,
     setFocus: setFocus,
-    remove: remove
+    remove: remove,
+    popupEscKeydownHandler: popupEscKeydownHandler
   };
 })();
