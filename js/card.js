@@ -9,11 +9,11 @@
    * @param {*} templateFeatures коллекция DOM-узлов - элементы <li> из списка <ul class="popup__features">
    */
   var changeFeatures = function (objectFeatures, templateFeatures) {
-    for (var f = 0; f < objectFeatures.length; f++) {
-      objectFeatures[f] = 'feature--' + objectFeatures[f];
-    }
+    var objectFeatesNames = objectFeatures.map(function (value) {
+      return 'feature--' + value;
+    });
     for (var t = 0; t < templateFeatures.length; t++) {
-      if (objectFeatures.indexOf(templateFeatures[t].classList[1]) === -1) {
+      if (objectFeatesNames.indexOf(templateFeatures[t].classList[1]) === -1) {
         templateFeatures[t].remove();
       }
     }

@@ -13,7 +13,7 @@
   var pinMain = document.querySelector('.map__pin--main');
   /**
    * @description создает DOM-элемен - пин
-   * @param {object} offer объект обявление - элемент из массива объявлений @see offers
+   * @param {object} offer одно обявление
    * @return {Node} новую DOM-ноду - пин
    */
   var createPin = function (offer) {
@@ -26,12 +26,17 @@
 
     return elementPin;
   };
+  // сохраним данные после загрузки
+  var offers = [];
   /**
    * @description получает данные о схожих объявлениях с сервера
-   * @param {array} offers массив данных с сервера со схожими объявлениями
+   * @param {Array} data массив данных с сервера со схожими объявлениями
    */
-  var successHandler = function (offers) {
-    var offersArray = offers;
+  var successHandler = function (data) {
+    offers = data;
+  };
+
+  var renderPins = function (offersElements) {
     /**
      * @description обработчик клика по пину.
      * @param {object} evt
@@ -39,32 +44,28 @@
     var pinClickHandler = function (evt) {
       disablePin();
       window.card.deleteOpenedPopup();
-      window.showCard(offersArray[activatePin(evt)]);
+      window.showCard(offersElements[activatePin(evt)]);
     };
     /**
-     * создает пины на основе объекта объявление ,
-     * пины отрисовываются в блоке .map__pins
+     * @description отрисовывает пины на основе загруженных объявлений в блоке .map__pins
      */
     var fragmentPins = document.createDocumentFragment();
-    for (var k = 0; k < offersArray.length; k++) {
-      var newPin = createPin(offersArray[k]);
-      newPin.classList.add('hidden');
+    for (var k = 0; k < offersElements.length && k < 5; k++) {
+      var newPin = createPin(offersElements[k]);
       newPin.setAttribute('data-id', k);
       newPin.addEventListener('click', pinClickHandler);
       fragmentPins.appendChild(newPin);
     }
     pinsBlock.appendChild(fragmentPins);
   };
-  /**
-   * @description убирает класс .hidden у пинов,
-   */
-  var showPins = function () {
-    var hidenPins = document.querySelectorAll('button.map__pin.hidden');
 
-    for (var g = 0; g < hidenPins.length; g++) {
-      hidenPins[g].classList.remove('hidden');
-    }
+  var deletePins = function () {
+    var pins = document.querySelectorAll('.map__pin[data-id]');
+    Array.from(pins).forEach(function (value) {
+      value.remove();
+    });
   };
+
 
   /**
    * @description активирует пин при нажатии (пин подсвечивается)
@@ -94,7 +95,7 @@
   var keksPinClickHandler = function () {
     window.map.showMap();
     window.form.activateForm();
-    showPins();
+    renderPins(offers);
     pinMain.removeEventListener('mouseup', keksPinClickHandler);
   };
   window.backend.download(successHandler, window.utils.errorHandler);
@@ -105,4 +106,84 @@
     pinLimits: PIN_LIMITS,
     disablePin: disablePin
   };
+
+  // Ф И Л Ь Т Р Ы
+  var filters = {
+    type: null,
+    price: null,
+    rooms: null,
+    guests: null,
+    features: []
+  };
+
+  var filterOffers = function (offersElements, filtersObject) {
+    var newOffers = offersElements.filter(function (item) {
+      var filteredByFeatures = true;
+
+      for (var i = 0; i < filtersObject.features.length; i++) {
+        if (item.offer.features.indexOf(filtersObject.features[i]) === -1) {
+          filteredByFeatures = false;
+          break;
+        }
+      }
+      return ((item.offer.type === filtersObject.type || filtersObject.type === null) &&
+        (item.offer.price === filtersObject.price || filtersObject.price === null) &&
+        (item.offer.rooms === filtersObject.rooms || filtersObject.rooms === null) &&
+        (item.offer.guests === filtersObject.guests || filtersObject.guests === null) &&
+        filteredByFeatures);
+    });
+    return newOffers.slice(0, 4);
+  };
+
+  var filtersChangeHandler = function () {
+    deletePins();
+    var filteredOffers = filterOffers(offers, filters);
+    renderPins(filteredOffers);
+  };
+
+
+  var housingType = document.querySelector('#housing-type');
+  housingType.addEventListener('change', function () {
+    filters.type = housingType.value;
+    console.log('type: ' + filters.type);
+    window.debounce(filtersChangeHandler);
+  });
+
+  var housingPrice = document.querySelector('#housing-price');
+  housingPrice.addEventListener('change', function () {
+    filters.price = housingPrice.value;
+    console.log('price: ' + filters.price);
+    window.debounce(filtersChangeHandler);
+  });
+
+  var housingRooms = document.querySelector('#housing-rooms');
+  housingRooms.addEventListener('change', function () {
+    filters.rooms = housingRooms.value;
+    console.log('rooms: ' + filters.rooms);
+    window.debounce(filtersChangeHandler);
+  });
+
+
+  var housingGuests = document.querySelector('#housing-guests');
+  housingGuests.addEventListener('change', function () {
+    filters.guests = housingGuests.value;
+    console.log('guests: ' + filters.guests);
+    window.debounce(filtersChangeHandler);
+  });
+
+  var housingFeatures = Array.from(document.querySelectorAll('#housing-features input'));
+
+  housingFeatures.forEach(function (value) {
+    value.addEventListener('change', function () {
+
+      filters.features = housingFeatures.reduce(function (accumulator, item) {
+        if (item.checked === true) {
+          accumulator.push(item.value);
+        }
+        return accumulator;
+      }, []);
+      console.log('features: ' + filters.features);
+      window.debounce(filtersChangeHandler);
+    });
+  });
 })();
