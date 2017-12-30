@@ -98,8 +98,10 @@
     }
     window.backend.upload(new FormData(form), function () {
       form.reset();
+      assignAddress(document.querySelector('.map__pin--main').offsetLeft, document.querySelector('.map__pin--main').offsetTop);
     }, window.utils.errorHandler);
     evt.preventDefault();
+
   }, false);
 
   /**
