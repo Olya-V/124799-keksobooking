@@ -8,12 +8,12 @@
    * @param {array} objectFeatures массив фич объекта объявление
    * @param {*} templateFeatures коллекция DOM-узлов - элементы <li> из списка <ul class="popup__features">
    */
-  var changeFeatures = function (objectFeatures, templateFeatures) {
-    for (var f = 0; f < objectFeatures.length; f++) {
-      objectFeatures[f] = 'feature--' + objectFeatures[f];
-    }
+  var getFeatures = function (objectFeatures, templateFeatures) {
+    var objectFeatesNames = objectFeatures.map(function (value) {
+      return 'feature--' + value;
+    });
     for (var t = 0; t < templateFeatures.length; t++) {
-      if (objectFeatures.indexOf(templateFeatures[t].classList[1]) === -1) {
+      if (objectFeatesNames.indexOf(templateFeatures[t].classList[1]) === -1) {
         templateFeatures[t].remove();
       }
     }
@@ -24,7 +24,7 @@
    * @param {object} offerObject объект обявление -  один элемент из массива объявлений @see offers
    * @return {*} fragment с карточкой объявления
    */
-  var createPopup = function (offerObject) {
+  var create = function (offerObject) {
     var fragmentAd = document.createDocumentFragment();
     var templateAd = document.querySelector('template').content.querySelector('article.map__card');
     var elementAd = templateAd.cloneNode(true);
@@ -39,7 +39,7 @@
 
     var templateFeaturesList = elementAd.querySelectorAll('.feature');
     var featuresList = offerObject.offer.features;
-    changeFeatures(featuresList, templateFeaturesList);
+    getFeatures(featuresList, templateFeaturesList);
     fragmentAd.appendChild(elementAd);
     return fragmentAd;
   };
@@ -56,11 +56,12 @@
   /**
    * @description удаляет открытые ранее popup
    */
-  var deleteOpenedPopup = function () {
+  var remove = function () {
     var openedPopup = document.querySelector('.popup');
 
     if (openedPopup) {
       window.data.map.removeChild(openedPopup);
+      document.removeEventListener('keydown', closeButtonClickHandler);
     }
   };
 
@@ -87,13 +88,11 @@
     }
   };
 
-  document.addEventListener('click', closeButtonClickHandler);
-
-  document.addEventListener('keydown', popupEscKeydownHandler);
-
   window.card = {
-    createPopup: createPopup,
+    create: create,
     setFocus: setFocus,
-    deleteOpenedPopup: deleteOpenedPopup
+    remove: remove,
+    popupEscKeydownHandler: popupEscKeydownHandler,
+    closeButtonClickHandler: closeButtonClickHandler
   };
 })();

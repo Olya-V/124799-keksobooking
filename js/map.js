@@ -9,6 +9,7 @@
     xMin: window.pin.pinMainParams.WIDTH / 2,
     xMax: elementToMove.parentNode.offsetWidth - window.pin.pinMainParams.WIDTH / 2
   };
+
   /**
    * @description затемняет блок .map
    */

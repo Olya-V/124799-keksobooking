@@ -11,12 +11,13 @@
   };
   var pinsBlock = document.querySelector('div.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
+
   /**
    * @description создает DOM-элемен - пин
-   * @param {object} offer объект обявление - элемент из массива объявлений @see offers
+   * @param {object} offer одно обявление
    * @return {Node} новую DOM-ноду - пин
    */
-  var createPin = function (offer) {
+  var create = function (offer) {
     var templatePin = document.querySelector('template').content.querySelector('button.map__pin');
     var elementPin = templatePin.cloneNode(true);
 
@@ -26,61 +27,56 @@
 
     return elementPin;
   };
-  /**
-   * @description получает данные о схожих объявлениях с сервера
-   * @param {array} offers массив данных с сервера со схожими объявлениями
-   */
-  var successHandler = function (offers) {
-    var offersArray = offers;
-    /**
-     * @description обработчик клика по пину.
-     * @param {object} evt
-     */
-    var pinClickHandler = function (evt) {
-      disablePin();
-      window.card.deleteOpenedPopup();
-      window.showCard(offersArray[activatePin(evt)]);
-    };
-    /**
-     * создает пины на основе объекта объявление ,
-     * пины отрисовываются в блоке .map__pins
-     */
-    var fragmentPins = document.createDocumentFragment();
-    for (var k = 0; k < offersArray.length; k++) {
-      var newPin = createPin(offersArray[k]);
-      newPin.classList.add('hidden');
-      newPin.setAttribute('data-id', k);
-      newPin.addEventListener('click', pinClickHandler);
-      fragmentPins.appendChild(newPin);
-    }
-    pinsBlock.appendChild(fragmentPins);
-  };
-  /**
-   * @description убирает класс .hidden у пинов,
-   */
-  var showPins = function () {
-    var hidenPins = document.querySelectorAll('button.map__pin.hidden');
-
-    for (var g = 0; g < hidenPins.length; g++) {
-      hidenPins[g].classList.remove('hidden');
-    }
-  };
 
   /**
    * @description активирует пин при нажатии (пин подсвечивается)
    * @param {object} evt
    * @return {object} id активного пина (button), по которому кликнули/нажали
    */
-  var activatePin = function (evt) {
+  var activate = function (evt) {
     var activePin = evt.currentTarget;
     activePin.classList.add('map__pin--active');
     return activePin.dataset.id;
   };
 
   /**
+   * @description отрисовывает пины с обработчиком клика на основе загруженных объявлений
+   * @param {*} offersElements
+   */
+  var render = function (offersElements) {
+    /**
+     * @description обработчик клика по пину.
+     * @param {object} evt
+     */
+    var pinClickHandler = function (evt) {
+      disable();
+      window.card.remove();
+      window.showCard.call(offersElements[activate(evt)]);
+    };
+    var fragmentPins = document.createDocumentFragment();
+    for (var k = 0; k < offersElements.length && k < 5; k++) {
+      var newPin = create(offersElements[k]);
+      newPin.setAttribute('data-id', k);
+      newPin.addEventListener('click', pinClickHandler);
+      fragmentPins.appendChild(newPin);
+    }
+    pinsBlock.appendChild(fragmentPins);
+  };
+
+  /**
+   * @description удлаяет отрисованные пины
+   */
+  var remove = function () {
+    var pins = document.querySelectorAll('.map__pin[data-id]');
+    Array.from(pins).forEach(function (value) {
+      value.remove();
+    });
+  };
+
+  /**
    * @description деактивирует пины, которые были активны (убирает подсветку)
    */
-  var disablePin = function () {
+  var disable = function () {
     var activePin = document.querySelector('.map__pin--active');
     if (activePin) {
       activePin.classList.remove('map__pin--active');
@@ -88,21 +84,24 @@
   };
 
   /**
-   * @description обработчик события клик по Кекс-пину
+   * @description обработчик события клик по главному пину
    * @constructor
    */
-  var keksPinClickHandler = function () {
+  var MainPinClickHandler = function () {
     window.map.showMap();
     window.form.activateForm();
-    showPins();
-    pinMain.removeEventListener('mouseup', keksPinClickHandler);
+    render(window.data.offers);
+    window.form.assignAddress(pinMain.offsetLeft, pinMain.offsetTop);
+    pinMain.removeEventListener('mouseup', MainPinClickHandler);
   };
-  window.backend.download(successHandler, window.utils.errorHandler);
-  pinMain.addEventListener('mouseup', keksPinClickHandler);
+  window.backend.download(window.utils.successHandler, window.utils.errorHandler);
+  pinMain.addEventListener('mouseup', MainPinClickHandler);
   window.pin = {
     pinMain: pinMain,
     pinMainParams: PIN_MAIN,
     pinLimits: PIN_LIMITS,
-    disablePin: disablePin
+    disablePin: disable,
+    remove: remove,
+    render: render
   };
 })();

@@ -7,9 +7,11 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+  var offers = [];
   window.data = {
     map: map,
-    type: type
+    type: type,
+    offers: offers
   };
 })();
 

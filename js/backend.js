@@ -2,7 +2,13 @@
 
 (function () {
   var SERVER_URL = 'https://js.dump.academy/keksobooking';
-  // var SERVER_URL = 'https://js.dump.academy/keksobook';
+
+  /**
+   * @description формируе запрос на сервер
+   * @param {Function} onLoad
+   * @param {Function} onError
+   * @return {XMLHttpRequest}
+   */
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
 
@@ -25,16 +31,31 @@
 
     return xhr;
   };
+
+  /**
+   * @description загружает данные с сервера
+   * @param {*} data
+   * @param {function} onLoad
+   * @param {function} onError
+   */
+  var upload = function (data, onLoad, onError) {
+    var xhr = setup(onLoad, onError);
+    xhr.open('POST', SERVER_URL);
+    xhr.send(data);
+  };
+
+  /**
+   * @description отправляет данные на сервер
+   * @param {function} onLoad
+   * @param {function} onError
+   */
+  var download = function (onLoad, onError) {
+    var xhr = setup(onLoad, onError);
+    xhr.open('GET', SERVER_URL + '/data');
+    xhr.send();
+  };
   window.backend = {
-    upload: function (data, onLoad, onError) {
-      var xhr = setup(onLoad, onError);
-      xhr.open('POST', SERVER_URL);
-      xhr.send(data);
-    },
-    download: function (onLoad, onError) {
-      var xhr = setup(onLoad, onError);
-      xhr.open('GET', SERVER_URL + '/data');
-      xhr.send();
-    }
+    upload: upload,
+    download: download
   };
 })();
