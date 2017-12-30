@@ -29,6 +29,17 @@
   };
 
   /**
+   * @description активирует пин при нажатии (пин подсвечивается)
+   * @param {object} evt
+   * @return {object} id активного пина (button), по которому кликнули/нажали
+   */
+  var activate = function (evt) {
+    var activePin = evt.currentTarget;
+    activePin.classList.add('map__pin--active');
+    return activePin.dataset.id;
+  };
+
+  /**
    * @description отрисовывает пины с обработчиком клика на основе загруженных объявлений
    * @param {*} offersElements
    */
@@ -37,6 +48,11 @@
      * @description обработчик клика по пину.
      * @param {object} evt
      */
+    var pinClickHandler = function (evt) {
+      disable();
+      window.card.remove();
+      window.showCard.call(offersElements[activate(evt)]);
+    };
     var fragmentPins = document.createDocumentFragment();
     for (var k = 0; k < offersElements.length && k < 5; k++) {
       var newPin = create(offersElements[k]);
@@ -55,17 +71,6 @@
     Array.from(pins).forEach(function (value) {
       value.remove();
     });
-  };
-
-  /**
-   * @description активирует пин при нажатии (пин подсвечивается)
-   * @param {object} evt
-   * @return {object} id активного пина (button), по которому кликнули/нажали
-   */
-  var activate = function (evt) {
-    var activePin = evt.currentTarget;
-    activePin.classList.add('map__pin--active');
-    return activePin.dataset.id;
   };
 
   /**
