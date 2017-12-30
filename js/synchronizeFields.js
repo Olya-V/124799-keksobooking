@@ -1,22 +1,23 @@
 'use strict';
 
 (function () {
+
   /**
    * @description синхронизирует значения двух полей
-   * @param {*} element1
-   * @param {*}  element2
-   * @param {Array} arrayOfValue1
-   * @param {Array}arrayOfValue2
+   * @param {*} firstElement
+   * @param {*}  secondElement
+   * @param {Array} firstValues
+   * @param {Array} secondValues
    * @param {Function} callback
    */
-  var call = function (element1, element2, arrayOfValue1, arrayOfValue2, callback) {
-    element1.addEventListener('change', function () {
-      var valueElement1 = arrayOfValue2[arrayOfValue1.indexOf(element1.value)];
-      callback(element2, valueElement1);
+  var call = function (firstElement, secondElement, firstValues, secondValues, callback) {
+    firstElement.addEventListener('change', function () {
+      var valueElement1 = secondValues[firstValues.indexOf(firstElement.value)];
+      callback(secondElement, valueElement1);
     });
-    element2.addEventListener('change', function () {
-      var valueElement2 = arrayOfValue1[arrayOfValue2.indexOf(element2.value)];
-      callback(element1, valueElement2);
+    secondElement.addEventListener('change', function () {
+      var valueElement2 = firstValues[secondValues.indexOf(secondElement.value)];
+      callback(firstElement, valueElement2);
     });
   };
   window.synchronizeFields = {

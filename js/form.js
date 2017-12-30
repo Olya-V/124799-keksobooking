@@ -46,6 +46,7 @@
       pricePerNight.setCustomValidity('');
     }
   });
+
   /**
    * @description назначает минимальную цену в зависимости от отмеченного атрибутом selected в HTML типа жилья
    */
@@ -65,6 +66,7 @@
         break;
     }
   };
+
   /**
    * @description синхронизирует кол-во гостей в зависимости от отмеченного атрибутом selected в HTML кол-ва комнат
    */
@@ -84,6 +86,7 @@
         break;
     }
   };
+
   /**
    * @description проверяет перед отправкой формы input-ы
    */
@@ -112,6 +115,7 @@
       fields[i].setAttribute('disabled', 'disabled');
     }
   };
+
   /**
    * @description делает форму c классом notice__form неактивной
    */

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   /**
    *  @description проверяет лимиты при определнии конечных координат элемента
    * @param {number} x - координаты элемента
@@ -11,6 +12,7 @@
    * @param {number} yMin - ограничения движения элемента
    * @return {Array} координаты элемента
    */
+
   var checkLimits = function (x, y, xMax, xMin, yMax, yMin) {
     var positionX = x;
     var positionY = y;
@@ -20,6 +22,7 @@
     }
     return [positionX, positionY];
   };
+
   /**
    * @description назначает координаты элементу при перемещении
    * @param {*} element перемещаемый DOM-элемент
@@ -67,6 +70,7 @@
       window.map.movementArea.addEventListener('mouseup', mouseUpHandler);
     });
   };
+
   /**
    * @description присваивает значение элементу
    * @param {*} element
@@ -75,6 +79,7 @@
   var syncValues = function (element, value) {
     element.value = value;
   };
+
   /**
    * @description присваивает минимальное значение элементу
    * @param {*} element
@@ -83,6 +88,7 @@
   var syncValueWithMin = function (element, value) {
     element.min = value;
   };
+
   /**
    * @description получает данные о схожих объявлениях с сервера
    * @param {Array} data массив данных с сервера со схожими объявлениями
@@ -90,6 +96,7 @@
   var successHandler = function (data) {
     window.data.offers = data;
   };
+
   /**
    * @description показывает сообщение с ошибкой на странице
    * @param {String} errorMessage

@@ -11,6 +11,7 @@
   };
   var pinsBlock = document.querySelector('div.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
+
   /**
    * @description создает DOM-элемен - пин
    * @param {object} offer одно обявление
@@ -26,6 +27,7 @@
 
     return elementPin;
   };
+
   /**
    * @description отрисовывает пины с обработчиком клика на основе загруженных объявлений
    * @param {*} offersElements
@@ -35,11 +37,6 @@
      * @description обработчик клика по пину.
      * @param {object} evt
      */
-    var pinClickHandler = function (evt) {
-      disable();
-      window.card.remove();
-      window.showCard.call(offersElements[activate(evt)]);
-    };
     var fragmentPins = document.createDocumentFragment();
     for (var k = 0; k < offersElements.length && k < 5; k++) {
       var newPin = create(offersElements[k]);
@@ -59,6 +56,7 @@
       value.remove();
     });
   };
+
   /**
    * @description активирует пин при нажатии (пин подсвечивается)
    * @param {object} evt

@@ -2,6 +2,7 @@
 
 (function () {
   var SERVER_URL = 'https://js.dump.academy/keksobooking';
+
   /**
    * @description формируе запрос на сервер
    * @param {Function} onLoad
@@ -30,6 +31,7 @@
 
     return xhr;
   };
+
   /**
    * @description загружает данные с сервера
    * @param {*} data
@@ -41,6 +43,7 @@
     xhr.open('POST', SERVER_URL);
     xhr.send(data);
   };
+
   /**
    * @description отправляет данные на сервер
    * @param {function} onLoad

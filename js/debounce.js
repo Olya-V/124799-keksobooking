@@ -4,6 +4,7 @@
   var DEBOUNCE_INTERVAL = 500;
 
   var lastTimeout;
+
   /**
    * @description устраняет дребезг при частом вызове той функции
    * @param {function} callback

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   /**
    * @description показыает карточку объявления
    * @param {Object} offerObject
