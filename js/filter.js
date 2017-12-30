@@ -58,22 +58,22 @@ var filtersChangeHandler = function () {
 
 housingType.addEventListener('change', function () {
   filters.type = housingType.value;
-  window.debounce(filtersChangeHandler);
+  window.debounce.call(filtersChangeHandler);
 });
 
 housingPrice.addEventListener('change', function () {
   filters.price = housingPrice.value;
-  window.debounce(filtersChangeHandler);
+  window.debounce.call(filtersChangeHandler);
 });
 
 housingRooms.addEventListener('change', function () {
   filters.rooms = housingRooms.value;
-  window.debounce(filtersChangeHandler);
+  window.debounce.call(filtersChangeHandler);
 });
 
 housingGuests.addEventListener('change', function () {
   filters.guests = housingGuests.value;
-  window.debounce(filtersChangeHandler);
+  window.debounce.call(filtersChangeHandler);
 });
 
 /**
@@ -91,6 +91,6 @@ var selectFeatures = function () {
 housingFeatures.forEach(function (value) {
   value.addEventListener('change', function () {
     filters.features = selectFeatures();
-    window.debounce(filtersChangeHandler);
+    window.debounce.call(filtersChangeHandler);
   });
 });
