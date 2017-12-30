@@ -88,6 +88,7 @@
     window.map.showMap();
     window.form.activateForm();
     render(window.data.offers);
+    window.form.assignAddress(pinMain.offsetLeft, pinMain.offsetTop);
     pinMain.removeEventListener('mouseup', MainPinClickHandler);
   };
   window.backend.download(window.utils.successHandler, window.utils.errorHandler);
