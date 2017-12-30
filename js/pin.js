@@ -109,15 +109,16 @@
 
   // Ф И Л Ь Т Р Ы
   var filters = {
-    type: null,
-    price: null,
-    rooms: null,
-    guests: null,
+    type: 'any',
+    price: 'any',
+    rooms: 'any',
+    guests: 'any',
     features: []
   };
 
   var filterOffers = function (offersElements, filtersObject) {
     var newOffers = offersElements.filter(function (item) {
+
       var filteredByFeatures = true;
 
       for (var i = 0; i < filtersObject.features.length; i++) {
@@ -126,10 +127,18 @@
           break;
         }
       }
-      return ((item.offer.type === filtersObject.type || filtersObject.type === null) &&
-        (item.offer.price === filtersObject.price || filtersObject.price === null) &&
-        (item.offer.rooms === filtersObject.rooms || filtersObject.rooms === null) &&
-        (item.offer.guests === filtersObject.guests || filtersObject.guests === null) &&
+
+      var filteredByPrice = (
+        (item.offer.price < 10000 && filtersObject.price === 'low') ||
+        (item.offer.price >= 10000 && item.offer.price <= 50000 && filtersObject.price === 'middle') ||
+        (item.offer.price > 50000 && filtersObject.price === 'high') ||
+        filtersObject.price === 'any');
+
+
+      return ((item.offer.type === filtersObject.type || filtersObject.type === 'any') &&
+        filteredByPrice &&
+        (item.offer.rooms.toString() === filtersObject.rooms || filtersObject.rooms === 'any') &&
+        (item.offer.guests.toString() === filtersObject.guests || filtersObject.guests === 'any') &&
         filteredByFeatures);
     });
     return newOffers.slice(0, 4);
