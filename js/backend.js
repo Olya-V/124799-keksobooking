@@ -4,8 +4,8 @@
   var SERVER_URL = 'https://js.dump.academy/keksobooking';
   /**
    * @description формируе запрос на сервер
-   * @param {function} onLoad
-   * @param {function} onError
+   * @param {Function} onLoad
+   * @param {Function} onError
    * @return {XMLHttpRequest}
    */
   var setup = function (onLoad, onError) {
