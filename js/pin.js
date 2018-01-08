@@ -6,8 +6,8 @@
     WIDTH: 65
   };
   var PIN_LIMITS = {
-    Y_MIN: 100 - PIN_MAIN.HEIGHT,  // точно так?!
-    Y_MAX: 500 - PIN_MAIN.HEIGHT   // точно так?!
+    Y_MIN: 100 - PIN_MAIN.HEIGHT, // точно так?!
+    Y_MAX: 500 - PIN_MAIN.HEIGHT // точно так?!
   };
   var PIN_TO_RENDER = 5;
   var pinsBlock = document.querySelector('div.map__pins');
