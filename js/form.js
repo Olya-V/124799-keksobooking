@@ -18,6 +18,7 @@
   var pricePerNight = document.querySelector('#price');
   var rooms = document.querySelector('#room_number');
   var guests = document.querySelector('#capacity');
+  var inputs = [title, pricePerNight, address];
 
   /**
    * @description выводит комментарии, если поле Заголовок не заполнено или введено менее 30 символов
@@ -33,9 +34,37 @@
   });
 
   /**
+   * @description выводит комментарии, если поле Заголовок после измененеия заполнено неверно
+   */
+  title.addEventListener('change', function () {
+    if (title.validity.valueMissing) {
+      title.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH + ' символов.');
+    } else if (title.validity.tooShort) {
+      title.setCustomValidity('Минимальная длина — ' + TITLE_MIN_LENGTH + ' символов');
+    } else {
+      title.setCustomValidity('');
+    }
+  });
+
+  /**
    * @description выводит комментарии, если поле Цена не заполненно или заполнено неверно
    */
   pricePerNight.addEventListener('invalid', function () {
+    if (pricePerNight.value === '' || pricePerNight.validity.valueMissing) {
+      pricePerNight.setCustomValidity('Это обязательное поле. Введите число.');
+    } else if (pricePerNight.validity.rangeUnderflow) {
+      pricePerNight.setCustomValidity('Минимальное значение цены - ' + pricePerNight.min);
+    } else if (pricePerNight.validity.rangeOverflow) {
+      pricePerNight.setCustomValidity('Максимальное значение цены - ' + pricePerNight.max);
+    } else {
+      pricePerNight.setCustomValidity('');
+    }
+  });
+
+  /**
+   * @description выводит комментарии, если поле Цена после измененеия заполнено неверно
+   */
+  pricePerNight.addEventListener('change', function () {
     if (pricePerNight.value === '' || pricePerNight.validity.valueMissing) {
       pricePerNight.setCustomValidity('Это обязательное поле. Введите число.');
     } else if (pricePerNight.validity.rangeUnderflow) {
@@ -68,43 +97,69 @@
   };
 
   /**
-   * @description синхронизирует кол-во гостей в зависимости от отмеченного атрибутом selected в HTML кол-ва комнат
+   * @description синхронизирует кол-во гостей в зависимости от кол-ва комнат
    */
   var setRoomsForSelectedType = function () {
     switch (rooms.options.selectedIndex) {
       case 0:
         guests.options[2].selected = true;
+        guests.options[0].setAttribute('disabled', 'disabled');
+        guests.options[1].setAttribute('disabled', 'disabled');
+        guests.options[3].removeAttribute('disabled');
+        guests.options[3].setAttribute('disabled', 'disabled');
         break;
       case 1:
         guests.options[1].selected = true;
+        guests.options[0].setAttribute('disabled', 'disabled');
+        guests.options[1].removeAttribute('disabled');
+        guests.options[2].removeAttribute('disabled');
+        guests.options[3].setAttribute('disabled', 'disabled');
         break;
       case 2:
         guests.options[0].selected = true;
+        guests.options[0].removeAttribute('disabled');
+        guests.options[1].removeAttribute('disabled');
+        guests.options[2].removeAttribute('disabled');
+        guests.options[3].setAttribute('disabled', 'disabled');
         break;
       case 3:
         guests.options[3].selected = true;
+        guests.options[0].setAttribute('disabled', 'disabled');
+        guests.options[1].setAttribute('disabled', 'disabled');
+        guests.options[2].setAttribute('disabled', 'disabled');
+        guests.options[3].removeAttribute('disabled');
         break;
     }
   };
 
   /**
-   * @description проверяет перед отправкой формы input-ы
+   * @description проверяет валидность полей формы
+   * @param {Array} fieldsToCheck
+   * @return {Boolean}
    */
-  form.addEventListener('submit', function (evt) {
-    var inputs = [title, pricePerNight, address];
-
-    for (var w = 0; w < inputs.length; w++) {
-      if (!inputs[w].validity.valid || inputs[w].value === '') {
-        inputs[w].style.borderColor = 'red';
-        evt.preventDefault();
+  var checkValidity = function (fieldsToCheck) {
+    for (var w = 0; w < fieldsToCheck.length; w++) {
+      if (!fieldsToCheck[w].validity.valid || fieldsToCheck[w].value === '') {
+        fieldsToCheck[w].style.borderColor = 'red';
+        return false;
       }
     }
+    return true;
+  };
+
+  /**
+   * @description отправляем валидную форму на сервер
+   */
+  form.addEventListener('submit', function (evt) {
+    if (!checkValidity(inputs)) {
+      evt.preventDefault();
+      return;
+    }
+
     window.backend.upload(new FormData(form), function () {
       form.reset();
       assignAddress(document.querySelector('.map__pin--main').offsetLeft, document.querySelector('.map__pin--main').offsetTop);
     }, window.utils.errorHandler);
-    evt.preventDefault();
-
   }, false);
 
   /**
@@ -153,9 +208,9 @@
   disableForm();
   setPriceForSelectedType();
   setRoomsForSelectedType();
-  window.synchronizeFields.call(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronizeFields.call(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
-  window.synchronizeFields.call(rooms, guests, ['1', '2', '3', '100'], ['1', '2', '3', '0'], window.utils.syncValues);
+  rooms.addEventListener('change', setRoomsForSelectedType);
+  window.synchronizeFields.synchronize(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
+  window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
   window.form = {
     activateForm: activateForm,
     assignAddress: assignAddress

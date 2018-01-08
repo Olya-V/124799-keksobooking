@@ -6,9 +6,10 @@
     WIDTH: 65
   };
   var PIN_LIMITS = {
-    Y_MIN: 100,
-    Y_MAX: 500
+    Y_MIN: 100 - PIN_MAIN.HEIGHT,  // точно так?!
+    Y_MAX: 500 - PIN_MAIN.HEIGHT   // точно так?!
   };
+  var PIN_TO_RENDER = 5;
   var pinsBlock = document.querySelector('div.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
 
@@ -51,10 +52,10 @@
     var pinClickHandler = function (evt) {
       disable();
       window.card.remove();
-      window.showCard.call(offersElements[activate(evt)]);
+      window.showCard.show(offersElements[activate(evt)]);
     };
     var fragmentPins = document.createDocumentFragment();
-    for (var k = 0; k < offersElements.length && k < 5; k++) {
+    for (var k = 0; k < offersElements.length && k < PIN_TO_RENDER; k++) {
       var newPin = create(offersElements[k]);
       newPin.setAttribute('data-id', k);
       newPin.addEventListener('click', pinClickHandler);
@@ -97,6 +98,7 @@
   window.backend.download(window.utils.successHandler, window.utils.errorHandler);
   pinMain.addEventListener('mouseup', MainPinClickHandler);
   window.pin = {
+    pinToRender: PIN_TO_RENDER,
     pinMain: pinMain,
     pinMainParams: PIN_MAIN,
     pinLimits: PIN_LIMITS,

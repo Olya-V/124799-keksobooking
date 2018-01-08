@@ -2,6 +2,7 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var RUBLE = '\u20bd';
 
   /**
    * @description формирует список фич для карточки c объявлением
@@ -29,13 +30,13 @@
     var templateAd = document.querySelector('template').content.querySelector('article.map__card');
     var elementAd = templateAd.cloneNode(true);
     elementAd.querySelector('img').src = offerObject.author.avatar;
-    elementAd.querySelector('h3').innerHTML = offerObject.offer.title;
-    elementAd.querySelector('small').innerHTML = offerObject.offer.address;
-    elementAd.querySelector('.popup__price').innerHTML = offerObject.offer.price + ' &#x20bd;/ночь';
+    elementAd.querySelector('h3').textContent = offerObject.offer.title;
+    elementAd.querySelector('small').textContent = offerObject.offer.address;
+    elementAd.querySelector('.popup__price').textContent = offerObject.offer.price + ' ' + RUBLE + '/ночь';
     elementAd.querySelector('h4').innerHTML = window.data.type[offerObject.offer.type];
-    elementAd.querySelector('p:nth-of-type(3)').innerHTML = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
-    elementAd.querySelector('p:nth-of-type(4)').innerHTML = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
-    elementAd.querySelector('p:nth-of-type(5)').innerHTML = offerObject.offer.description;
+    elementAd.querySelector('p:nth-of-type(3)').textContent = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
+    elementAd.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
+    elementAd.querySelector('p:nth-of-type(5)').textContent = offerObject.offer.description;
 
     var templateFeaturesList = elementAd.querySelectorAll('.feature');
     var featuresList = offerObject.offer.features;
