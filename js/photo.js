@@ -21,13 +21,16 @@
     }
     chooserContainter.style.width = '140px';
     chooserContainter.style.marginBottom = '3px';
-    photoContainer.style.width = '480px';
+    photoContainer.style.width = '460px';
     photoList.style.display = 'flex';
     photoList.style.flexWrap = 'wrap';
     photoList.style.listStyle = 'none';
     photoList.style.margin = '0px';
     photoList.style.padding = '0px';
     photoList.setAttribute('dropzone', 'move');
+    photoList.style.borderWidth = '5px';
+    photoList.style.border = 'dashed';
+    photoList.style.borderColor = 'transparent';
   };
 
   createPhotoSpaces();
@@ -67,29 +70,65 @@
   // П Е Р Е Т А С К И В А Н И Е
   var draggedItem = null;
 
-  photoList.addEventListener('dragstart', function (evt) {
+  var dragstartHandler = function (evt) {
+    console.log('dragStart');
+    console.log(evt);
     if (evt.target.tagName.toLowerCase() === 'img') {
       draggedItem = evt.target;
+      evt.currentTarget.style.borderColor = 'black';
       evt.dataTransfer.setData('text/plain', evt.target.alt);
+      evt.dataTransfer.effectAllowed = 'move';
     }
-  });
+  };
 
-  photoList.addEventListener('dragover', function (evt) {
+  var dragoverHandler = function (evt) {
+    console.log('dragOver');
+    console.log(evt);
+    evt.currentTarget.style.background = 'lightblue';
     evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'move';
     return false;
-  });
+  };
 
-  photoList.addEventListener('drop', function (evt) {
+  var dragenterHandler = function (evt) {
+    evt.currentTarget.style.background = 'yellow';
+    // evt.preventDefault();
+  };
+
+  var dropHandler = function (evt) {
+    console.log('Drop');
+    console.log(evt);
     evt.target.style.backgroundColor = COLOR_GREY;
+    evt.currentTarget.style.background = '';
+    evt.currentTarget.style.borderColor = 'trasnparent';
+    evt.preventDefault();
     evt.target.appendChild(draggedItem);
-    evt.preventDefault();
-  });
+  };
 
-  photoList.addEventListener('dragenter', function (evt) {
-    evt.preventDefault();
-  });
+  var dragleaveHandler = function (evt) {
+    console.log('dragLeave');
+    console.log(evt);
+    evt.currentTarget.style.background = 'red';
+    // evt.preventDefault();
+  };
 
-  photoList.addEventListener('dragleave', function (evt) {
-    evt.preventDefault();
-  });
+  var dragendHandler = function (evt) {
+    console.log('dragEnd');
+    console.log(evt);
+    evt.target.background = 'pink';
+  };
+
+  var dragexitHandler = function (evt) {
+    console.log('dragExit');
+    console.log(evt);
+    evt.currentTarget.style.background = 'green';
+  };
+
+  photoList.addEventListener('dragstart', dragstartHandler);
+  photoList.addEventListener('dragover', dragoverHandler);
+  photoList.addEventListener('dragenter', dragenterHandler);
+  photoList.addEventListener('dragleave', dragleaveHandler);
+  photoList.addEventListener('drop', dropHandler);
+  photoList.addEventListener('dradend', dragendHandler);
+  photoList.addEventListener('dradexit', dragexitHandler);
 })();
