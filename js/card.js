@@ -29,6 +29,9 @@
     var fragmentAd = document.createDocumentFragment();
     var templateAd = document.querySelector('template').content.querySelector('article.map__card');
     var elementAd = templateAd.cloneNode(true);
+    var photos = Array.from(offerObject.offer.photos);
+    var photoContainer = elementAd.querySelector('.popup__pictures');
+
     elementAd.querySelector('img').src = offerObject.author.avatar;
     elementAd.querySelector('h3').textContent = offerObject.offer.title;
     elementAd.querySelector('small').textContent = offerObject.offer.address;
@@ -38,6 +41,19 @@
     elementAd.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
     elementAd.querySelector('p:nth-of-type(5)').textContent = offerObject.offer.description;
 
+    var firstPhoto = photoContainer.querySelector('li img');
+    firstPhoto.src = photos[0];
+    firstPhoto.style.width = '30px';
+    firstPhoto.style.height = '28px';
+    firstPhoto.style.marginRight = '10px';
+    for (var p = 1; p < photos.length; p++) {
+      var listItem = photoContainer.insertAdjacentElement('beforeend', document.createElement('LI'));
+      var photoItem = listItem.insertAdjacentElement('beforeend', document.createElement('IMG'));
+      photoItem.src = photos[p];
+      photoItem.style.width = '30px';
+      photoItem.style.height = '28px';
+      photoItem.style.marginRight = '10px';
+    }
     var templateFeaturesList = elementAd.querySelectorAll('.feature');
     var featuresList = offerObject.offer.features;
     getFeatures(featuresList, templateFeaturesList);
