@@ -7,7 +7,7 @@
   var preview = document.querySelector('.notice__preview img');
 
   /**
-   * @description обработчик загрузки фоторграфий в форме подачи объявления
+   * @description обработчик загрузки аватарки
    * @param {Object} evt
    */
   var avatarSelectHadler = function (evt) {
