@@ -6,12 +6,16 @@
   var chooser = document.querySelector('#avatar');
   var preview = document.querySelector('.notice__preview img');
 
-  chooser.addEventListener('change', function () {
-    var file = chooser.files[0];
-    var fileName = file.name.toLowerCase();
+  /**
+   * @description обработчик загрузки фоторграфий в форме подачи объявления
+   * @param {Object} evt
+   */
+  var avatarSelectHadler = function (evt) {
+    var file = evt.target.files[0];
+    var name = file.name.toLowerCase();
 
-    var matches = TYPES.some(function (it) {
-      return fileName.endsWith(it);
+    var matches = TYPES.some(function (format) {
+      return name.endsWith(format);
     });
 
     if (matches) {
@@ -20,8 +24,8 @@
       reader.addEventListener('load', function () {
         preview.src = reader.result;
       });
-
-      reader.readAsDataURL(file);
     }
-  });
+    reader.readAsDataURL(file);
+  };
+  chooser.addEventListener('change', avatarSelectHadler);
 })();
