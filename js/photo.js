@@ -39,15 +39,8 @@
 
     for (var j = 0; j < files.length; j++) {
       var name = files[j].name.toLowerCase();
-
-      var check = TYPES.some(function (format) {
-        return name.endsWith(format);
-      });
-
-      if (check) {
-        var reader = new FileReader();
-        reader.readAsDataURL(files[j]);
-        reader.addEventListener('load', setPhoto);
+      if (window.utils.checkFileFormat(name, TYPES)) {
+        window.utils.loadMultipleFiles(files[j], setPhoto);
       }
     }
   };

@@ -14,11 +14,7 @@
     var file = evt.target.files[0];
     var name = file.name.toLowerCase();
 
-    var matches = TYPES.some(function (format) {
-      return name.endsWith(format);
-    });
-
-    if (matches) {
+    if (window.utils.checkFileFormat(name, TYPES)) {
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
