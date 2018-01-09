@@ -23,7 +23,7 @@
   /**
    * @description выводит комментарии, если поле Заголовок не заполнено или введено менее 30 символов
    */
-  title.addEventListener('invalid', function () {
+  var validateTitle = function () {
     if (title.validity.valueMissing) {
       title.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH + ' символов.');
     } else if (title.validity.tooShort) {
@@ -31,25 +31,12 @@
     } else {
       title.setCustomValidity('');
     }
-  });
-
-  /**
-   * @description выводит комментарии, если поле Заголовок после измененеия заполнено неверно
-   */
-  title.addEventListener('change', function () {
-    if (title.validity.valueMissing) {
-      title.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH + ' символов.');
-    } else if (title.validity.tooShort) {
-      title.setCustomValidity('Минимальная длина — ' + TITLE_MIN_LENGTH + ' символов');
-    } else {
-      title.setCustomValidity('');
-    }
-  });
+  };
 
   /**
    * @description выводит комментарии, если поле Цена не заполненно или заполнено неверно
    */
-  pricePerNight.addEventListener('invalid', function () {
+  var validatepricePerNight = function () {
     if (pricePerNight.value === '' || pricePerNight.validity.valueMissing) {
       pricePerNight.setCustomValidity('Это обязательное поле. Введите число.');
     } else if (pricePerNight.validity.rangeUnderflow) {
@@ -59,22 +46,7 @@
     } else {
       pricePerNight.setCustomValidity('');
     }
-  });
-
-  /**
-   * @description выводит комментарии, если поле Цена после измененеия заполнено неверно
-   */
-  pricePerNight.addEventListener('change', function () {
-    if (pricePerNight.value === '' || pricePerNight.validity.valueMissing) {
-      pricePerNight.setCustomValidity('Это обязательное поле. Введите число.');
-    } else if (pricePerNight.validity.rangeUnderflow) {
-      pricePerNight.setCustomValidity('Минимальное значение цены - ' + pricePerNight.min);
-    } else if (pricePerNight.validity.rangeOverflow) {
-      pricePerNight.setCustomValidity('Максимальное значение цены - ' + pricePerNight.max);
-    } else {
-      pricePerNight.setCustomValidity('');
-    }
-  });
+  };
 
   /**
    * @description назначает минимальную цену в зависимости от отмеченного атрибутом selected в HTML типа жилья
@@ -208,7 +180,13 @@
   disableForm();
   setPriceForSelectedType();
   setRoomsForSelectedType();
+
+  title.addEventListener('invalid', validateTitle);
+  title.addEventListener('change', validateTitle);
+  pricePerNight.addEventListener('invalid', validatepricePerNight);
+  pricePerNight.addEventListener('change', validatepricePerNight);
   rooms.addEventListener('change', setRoomsForSelectedType);
+
   window.synchronizeFields.synchronize(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
   window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
   window.form = {
