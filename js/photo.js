@@ -3,6 +3,7 @@
 (function () {
   var TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var AMOUNT = 10;
+  var COLOR_GREY = '#ada8a8';
 
   var chooserContainter = document.querySelector('.form__photo-container .upload');
   var chooser = document.querySelector('#images');
@@ -12,7 +13,7 @@
   var createPhotoSpaces = function () {
     for (var l = 0; l < AMOUNT; l++) {
       var item = photoList.insertAdjacentElement('beforeend', document.createElement('LI'));
-      item.style.backgroundColor = '#ada8a8';
+      item.style.backgroundColor = COLOR_GREY;
       item.style.width = '80px';
       item.style.height = '70px';
       item.style.margin = '5px';
@@ -79,7 +80,7 @@
   });
 
   photoList.addEventListener('drop', function (evt) {
-    evt.target.style.backgroundColor = '#ada8a8';
+    evt.target.style.backgroundColor = COLOR_GREY;
     evt.target.appendChild(draggedItem);
     evt.preventDefault();
   });
