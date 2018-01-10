@@ -2,6 +2,7 @@
 
 (function () {
   var SERVER_URL = 'https://js.dump.academy/keksobooking';
+  var STATUS_OK = 200;
 
   /**
    * @description формируе запрос на сервер
@@ -15,7 +16,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === STATUS_OK) {
         onLoad(xhr.response);
       } else {
         onError('Ошибка: ' + xhr.status + ' ' + xhr.statusText);

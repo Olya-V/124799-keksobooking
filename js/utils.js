@@ -121,11 +121,36 @@
     node.appendChild(message);
   };
 
+  /**
+   * @description проверяет параметр загружаемого файла
+   * @param {String} filename
+   * @param {Array } types массив разрешенных форматов
+   * @return {boolean}
+   */
+  var checkFileFormat = function (filename, types) {
+    return types.some(function (format) {
+      return filename.endsWith(format);
+    });
+  };
+
+  /**
+   * @description загружает несколько файлов
+   * @param {*} file элемент массива c файлами
+   * @param {Function} renderFile функция отрисовки файлов
+   */
+  var loadMultipleFiles = function (file, renderFile) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.addEventListener('load', renderFile);
+  };
+
   window.utils = {
     dragItem: dragItem,
     syncValues: syncValues,
     syncValueWithMin: syncValueWithMin,
     successHandler: successHandler,
-    errorHandler: errorHandler
+    errorHandler: errorHandler,
+    checkFileFormat: checkFileFormat,
+    loadMultipleFiles: loadMultipleFiles
   };
 })();
