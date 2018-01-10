@@ -46,4 +46,8 @@
   };
 
   chooser.addEventListener('change', photoSelectHandler);
+
+  window.photo = {
+    photoContainer: photoContainer
+  };
 })();

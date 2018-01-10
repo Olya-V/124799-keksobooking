@@ -120,6 +120,20 @@
   };
 
   /**
+   * @description очищает форму после отправки
+   */
+  var resetForm = function () {
+    form.reset();
+    var photo = window.photo.photoContainer.querySelectorAll('img');
+    for (var t = 0; t < photo.length; t++) {
+      photo[t].remove();
+    }
+    var avatar = document.querySelector('.notice__preview img');
+    avatar.src = 'img/muffin.png';
+    assignAddress(document.querySelector('.map__pin--main').offsetLeft, document.querySelector('.map__pin--main').offsetTop);
+  };
+
+  /**
    * @description отправляем валидную форму на сервер
    */
   form.addEventListener('submit', function (evt) {
@@ -128,10 +142,7 @@
       return;
     }
 
-    window.backend.upload(new FormData(form), function () {
-      form.reset();
-      assignAddress(document.querySelector('.map__pin--main').offsetLeft, document.querySelector('.map__pin--main').offsetTop);
-    }, window.utils.errorHandler);
+    window.backend.upload(new FormData(form), resetForm, window.utils.errorHandler);
 
     evt.preventDefault();
   }, false);
