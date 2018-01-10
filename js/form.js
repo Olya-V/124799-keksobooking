@@ -3,10 +3,10 @@
 (function () {
   var TITLE_MIN_LENGTH = 30;
   var TITLE_MAX_LENGTH = 100;
-  var SHACK_MIN_PRICE = '0';
-  var APPARTMENT_MIN_PRICE = '1000';
-  var HOUSE_MIN_PRICE = '5000';
-  var PALACE_MIN_PRICE = '10000';
+  var SHACK_MIN_PRICE = 0;
+  var APPARTMENT_MIN_PRICE = 1000;
+  var HOUSE_MIN_PRICE = 5000;
+  var PALACE_MIN_PRICE = 10000;
 
   var form = document.querySelector('.notice__form');
   var fields = document.querySelectorAll('form.notice__form fieldset');
@@ -201,7 +201,7 @@
   rooms.addEventListener('change', setRoomsForSelectedType);
 
   window.synchronizeFields.synchronize(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [parseInt(APPARTMENT_MIN_PRICE, 10), parseInt(SHACK_MIN_PRICE, 10), parseInt(HOUSE_MIN_PRICE, 10), parseInt(PALACE_MIN_PRICE, 10)], window.utils.syncValueWithMin);
+  window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [APPARTMENT_MIN_PRICE, SHACK_MIN_PRICE, HOUSE_MIN_PRICE, PALACE_MIN_PRICE], window.utils.syncValueWithMin);
   window.form = {
     activateForm: activateForm,
     assignAddress: assignAddress
