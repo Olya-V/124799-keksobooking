@@ -201,7 +201,7 @@
   rooms.addEventListener('change', setRoomsForSelectedType);
 
   window.synchronizeFields.synchronize(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [1000, 0, 5000, 10000], window.utils.syncValueWithMin);
+  window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [parseInt(APPARTMENT_MIN_PRICE, 10), parseInt(SHACK_MIN_PRICE, 10), parseInt(HOUSE_MIN_PRICE, 10), parseInt(PALACE_MIN_PRICE, 10)], window.utils.syncValueWithMin);
   window.form = {
     activateForm: activateForm,
     assignAddress: assignAddress
