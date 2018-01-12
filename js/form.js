@@ -187,7 +187,7 @@
    * @param {number} y
    */
   var assignAddress = function (x, y) {
-    address.value = 'x: ' + (x + (window.pin.pinMainParams.WIDTH / 2)) + ', y: ' + (y + window.pin.pinMainParams.HEIGHT);
+    address.value = 'x: ' + (x + (window.pin.parameters.WIDTH / 2)) + ', y: ' + (y + window.pin.parameters.HEIGHT);
   };
 
   disableForm();
@@ -200,10 +200,10 @@
   pricePerNight.addEventListener('change', validatepricePerNight);
   rooms.addEventListener('change', setRoomsForSelectedType);
 
-  window.synchronizeFields.synchronize(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronizeFields.synchronize(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [APPARTMENT_MIN_PRICE, SHACK_MIN_PRICE, HOUSE_MIN_PRICE, PALACE_MIN_PRICE], window.utils.syncValueWithMin);
+  window.synchronize.fields(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
+  window.synchronize.fields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [APPARTMENT_MIN_PRICE, SHACK_MIN_PRICE, HOUSE_MIN_PRICE, PALACE_MIN_PRICE], window.utils.syncValueWithMin);
   window.form = {
-    activateForm: activateForm,
+    activate: activateForm,
     assignAddress: assignAddress
   };
 })();

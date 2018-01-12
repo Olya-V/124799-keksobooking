@@ -52,7 +52,7 @@
     var pinClickHandler = function (evt) {
       disable();
       window.card.remove();
-      window.showCard.show(offersElements[activate(evt)]);
+      window.show.card(offersElements[activate(evt)]);
     };
     var fragmentPins = document.createDocumentFragment();
     for (var k = 0; k < offersElements.length && k < PIN_TO_RENDER; k++) {
@@ -89,8 +89,8 @@
    * @constructor
    */
   var MainPinClickHandler = function () {
-    window.map.showMap();
-    window.form.activateForm();
+    window.map.show();
+    window.form.activate();
     render(window.data.offers);
     window.form.assignAddress(pinMain.offsetLeft, pinMain.offsetTop);
     pinMain.removeEventListener('mouseup', MainPinClickHandler);
@@ -98,10 +98,10 @@
   window.backend.download(window.utils.successHandler, window.utils.errorHandler);
   pinMain.addEventListener('mouseup', MainPinClickHandler);
   window.pin = {
-    pinToRender: PIN_TO_RENDER,
-    pinMain: pinMain,
-    pinMainParams: PIN_MAIN,
-    pinLimits: PIN_LIMITS,
+    amount: PIN_TO_RENDER,
+    main: pinMain,
+    parameters: PIN_MAIN,
+    limits: PIN_LIMITS,
     disablePin: disable,
     remove: remove,
     render: render
