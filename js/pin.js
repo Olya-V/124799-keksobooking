@@ -52,7 +52,7 @@
     var pinClickHandler = function (evt) {
       disable();
       window.card.remove();
-      window.show.card(offersElements[activate(evt)]);
+      window.showCard(offersElements[activate(evt)]);
     };
     var fragmentPins = document.createDocumentFragment();
     for (var k = 0; k < offersElements.length && k < PIN_TO_RENDER; k++) {

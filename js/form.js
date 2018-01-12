@@ -124,13 +124,12 @@
    */
   var resetForm = function () {
     form.reset();
-    var photo = window.photo.photoContainer.querySelectorAll('img');
+    var photo = window.data.photoContainer.querySelectorAll('img');
     for (var t = 0; t < photo.length; t++) {
       photo[t].remove();
     }
-    var avatar = document.querySelector('.notice__preview img');
-    avatar.src = 'img/muffin.png';
-    assignAddress(document.querySelector('.map__pin--main').offsetLeft, document.querySelector('.map__pin--main').offsetTop);
+    window.data.avatar.src = 'img/muffin.png';
+    assignAddress(window.pin.main.offsetLeft, window.pin.main.offsetTop);
   };
 
   /**
@@ -200,8 +199,8 @@
   pricePerNight.addEventListener('change', validatepricePerNight);
   rooms.addEventListener('change', setRoomsForSelectedType);
 
-  window.synchronize.fields(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronize.fields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [APPARTMENT_MIN_PRICE, SHACK_MIN_PRICE, HOUSE_MIN_PRICE, PALACE_MIN_PRICE], window.utils.syncValueWithMin);
+  window.synchronizeFields(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
+  window.synchronizeFields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [APPARTMENT_MIN_PRICE, SHACK_MIN_PRICE, HOUSE_MIN_PRICE, PALACE_MIN_PRICE], window.utils.syncValueWithMin);
   window.form = {
     activate: activateForm,
     assignAddress: assignAddress

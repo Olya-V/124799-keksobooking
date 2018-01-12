@@ -4,7 +4,6 @@
   var TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var chooser = document.querySelector('#avatar');
-  var preview = document.querySelector('.notice__preview img');
 
   /**
    * @description обработчик загрузки аватарки
@@ -18,7 +17,7 @@
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        preview.src = reader.result;
+        window.data.avatar.src = reader.result;
       });
     }
     reader.readAsDataURL(file);

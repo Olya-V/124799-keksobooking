@@ -15,9 +15,7 @@
     document.addEventListener('keydown', window.card.popupEscKeydownHandler);
   };
 
-  window.show = {
-    card: showCard
-  };
+  window.showCard = showCard;
 })();
 
 

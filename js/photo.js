@@ -5,22 +5,21 @@
 
   var chooserContainter = document.querySelector('.form__photo-container .upload');
   var chooser = document.querySelector('#images');
-  var photoContainer = document.querySelector('.form__photo-container');
 
   chooser.setAttribute('multiple', 'true');
   chooserContainter.style.width = '140px';
   chooserContainter.style.marginBottom = '3px';
-  photoContainer.style.width = '460px';
-  photoContainer.style.display = 'flex';
-  photoContainer.style.flexWrap = 'wrap';
-  photoContainer.style.listStyle = 'none';
+  window.data.photoContainer.style.width = '460px';
+  window.data.photoContainer.style.display = 'flex';
+  window.data.photoContainer.style.flexWrap = 'wrap';
+  window.data.photoContainer.style.listStyle = 'none';
 
   /**
    * @description отображает загруженное фото
    * @param {Object} uploadEvt
    */
   var setPhoto = function (uploadEvt) {
-    var preview = photoContainer.insertAdjacentElement('beforeend', document.createElement('IMG'));
+    var preview = window.data.photoContainer.insertAdjacentElement('beforeend', document.createElement('IMG'));
     preview.src = uploadEvt.target.result;
     preview.style.width = '80px';
     preview.style.height = '70px';
@@ -46,8 +45,4 @@
   };
 
   chooser.addEventListener('change', photoSelectHandler);
-
-  window.photo = {
-    photoContainer: photoContainer
-  };
 })();

@@ -9,13 +9,12 @@
    * @description устраняет дребезг при частом вызове той функции
    * @param {function} callback
    */
-  var debounceFunction = function (callback) {
+  var debounce = function (callback) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
     lastTimeout = window.setTimeout(callback, DEBOUNCE_INTERVAL);
   };
-  window.debounce = {
-    debounceFunction: debounceFunction
-  };
+
+  window.debounce = debounce;
 })();
