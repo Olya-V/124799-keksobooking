@@ -50,7 +50,7 @@
         (item.offer.guests.toString() === filtersObject.guests || filtersObject.guests === 'any') &&
         filteredByFeatures);
     });
-    return newOffers.slice(0, window.pin.pinToRender - 1);
+    return newOffers.slice(0, window.pin.amount - 1);
   };
 
   /**
@@ -65,22 +65,22 @@
 
   housingType.addEventListener('change', function () {
     filters.type = housingType.value;
-    window.debounce.call(filtersChangeHandler);
+    window.debounce.debounceFunction(filtersChangeHandler);
   });
 
   housingPrice.addEventListener('change', function () {
     filters.price = housingPrice.value;
-    window.debounce.call(filtersChangeHandler);
+    window.debounce.debounceFunction(filtersChangeHandler);
   });
 
   housingRooms.addEventListener('change', function () {
     filters.rooms = housingRooms.value;
-    window.debounce.call(filtersChangeHandler);
+    window.debounce.debounceFunction(filtersChangeHandler);
   });
 
   housingGuests.addEventListener('change', function () {
     filters.guests = housingGuests.value;
-    window.debounce.call(filtersChangeHandler);
+    window.debounce.debounceFunction(filtersChangeHandler);
   });
 
   /**
@@ -98,8 +98,7 @@
   housingFeatures.forEach(function (value) {
     value.addEventListener('change', function () {
       filters.features = selectFeatures();
-      window.debounce.call(filtersChangeHandler);
+      window.debounce.debounceFunction(filtersChangeHandler);
     });
   });
 })();
-

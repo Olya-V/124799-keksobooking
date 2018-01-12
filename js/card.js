@@ -36,13 +36,13 @@
     elementAd.querySelector('h3').textContent = offerObject.offer.title;
     elementAd.querySelector('small').textContent = offerObject.offer.address;
     elementAd.querySelector('.popup__price').textContent = offerObject.offer.price + ' ' + RUBLE + '/ночь';
-    elementAd.querySelector('h4').innerHTML = window.data.type[offerObject.offer.type];
+    elementAd.querySelector('h4').textContent = window.data.type[offerObject.offer.type];
     elementAd.querySelector('p:nth-of-type(3)').textContent = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
     elementAd.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
     elementAd.querySelector('p:nth-of-type(5)').textContent = offerObject.offer.description;
 
     var firstPhoto = photoContainer.querySelector('li img');
-    firstPhoto.src = photos[0];
+    firstPhoto.src = photos[0] ? photos[0] : 'img/muffin.png';
     firstPhoto.style.width = '30px';
     firstPhoto.style.height = '28px';
     firstPhoto.style.marginRight = '10px';

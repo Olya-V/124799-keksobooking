@@ -6,7 +6,7 @@
    * @description показыает карточку объявления
    * @param {Object} offerObject
    */
-  var show = function (offerObject) {
+  var showCard = function (offerObject) {
     var mapFilters = document.querySelector('.map__filters-container');
     var ad = window.card.create(offerObject);
     window.data.map.insertBefore(ad, mapFilters);
@@ -15,8 +15,8 @@
     document.addEventListener('keydown', window.card.popupEscKeydownHandler);
   };
 
-  window.showCard = {
-    show: show
+  window.show = {
+    card: showCard
   };
 })();
 

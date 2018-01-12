@@ -10,7 +10,7 @@
    * @param {Array} secondValues
    * @param {Function} callback
    */
-  var synchronize = function (firstElement, secondElement, firstValues, secondValues, callback) {
+  var synchronizeFields = function (firstElement, secondElement, firstValues, secondValues, callback) {
     firstElement.addEventListener('change', function () {
       var valueElement1 = secondValues[firstValues.indexOf(firstElement.value)];
       callback(secondElement, valueElement1);
@@ -20,7 +20,7 @@
       callback(firstElement, valueElement2);
     });
   };
-  window.synchronizeFields = {
-    synchronize: synchronize
+  window.synchronize = {
+    fields: synchronizeFields
   };
 })();
