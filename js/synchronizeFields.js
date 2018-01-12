@@ -20,7 +20,6 @@
       callback(firstElement, valueElement2);
     });
   };
-  window.synchronize = {
-    fields: synchronizeFields
-  };
+
+  window.synchronizeFields = synchronizeFields;
 })();
