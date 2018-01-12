@@ -89,7 +89,7 @@
   var closeButtonClickHandler = function (evt) {
     if (evt.target.classList[0] === 'popup__close') {
       evt.target.parentNode.classList.add('hidden');
-      window.pin.disablePin();
+      window.pin.disable();
     }
   };
 
@@ -101,7 +101,7 @@
     if (evt.keyCode === ESC_KEYCODE) {
       var popup = document.querySelector('.popup:not(.hidden)');
       popup.classList.add('hidden');
-      window.pin.disablePin();
+      window.pin.disable();
     }
   };
 
