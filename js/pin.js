@@ -102,7 +102,7 @@
     main: pinMain,
     parameters: PIN_MAIN,
     limits: PIN_LIMITS,
-    disablePin: disable,
+    disable: disable,
     remove: remove,
     render: render
   };
