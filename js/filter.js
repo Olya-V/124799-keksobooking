@@ -1,5 +1,12 @@
 'use strict';
 
+var FILTER_PRICE = {
+  lowTo: 10000,
+  middleFrom: 10000,
+  middleTo: 50000,
+  hightFrom: 50000
+};
+
 var housingType = document.querySelector('#housing-type');
 var housingPrice = document.querySelector('#housing-price');
 var housingRooms = document.querySelector('#housing-rooms');
@@ -12,6 +19,7 @@ var filters = {
   guests: 'any',
   features: []
 };
+
 
 /**
  * @description фильтрует основной массив объявлений по критериям устгновленных фильтров
@@ -31,10 +39,9 @@ var filterOffers = function (offersElements, filtersObject) {
       }
     }
     var filteredByPrice = (
-      (item.offer.price < 10000 && filtersObject.price === 'low') ||
-      (item.offer.price >= 10000 && item.offer.price <= 50000 && filtersObject.price === 'middle') ||
-      (item.offer.price > 50000 && filtersObject.price === 'high') ||
-      filtersObject.price === 'any');
+      (item.offer.price < FILTER_PRICE.lowTo && filtersObject.price === 'low') ||
+      (item.offer.price >= FILTER_PRICE.middleFrom && item.offer.price <= FILTER_PRICE.middleTo && filtersObject.price === 'middle') ||
+      (item.offer.price > FILTER_PRICE.hightFrom && filtersObject.price === 'high') || filtersObject.price === 'any');
 
 
     return ((item.offer.type === filtersObject.type || filtersObject.type === 'any') &&
@@ -43,7 +50,7 @@ var filterOffers = function (offersElements, filtersObject) {
       (item.offer.guests.toString() === filtersObject.guests || filtersObject.guests === 'any') &&
       filteredByFeatures);
   });
-  return newOffers.slice(0, 4);
+  return newOffers.slice(0, window.pin.amount - 1);
 };
 
 /**
