@@ -3,7 +3,7 @@
 (function () {
 
   /**
-   *  @description проверяет лимиты при определнии конечных координат элемента
+   * @description проверяет лимиты при определнии конечных координат элемента
    * @param {number} x - координаты элемента
    * @param {number} y -  координаты элемента
    * @param {number} xMax - ограничения движения элемента
@@ -54,7 +54,7 @@
           x: moveEvt.pageX - clickOffset.x,
           y: moveEvt.pageY - clickOffset.y
         };
-        var finalPosition = checkLimits(position.x, position.y, window.map.dragLimits.xMax, window.map.dragLimits.xMin, window.map.dragLimits.yMax, window.map.dragLimits.yMin);
+        var finalPosition = checkLimits(position.x, position.y, window.map.dragLimits.X_MAX, window.map.dragLimits.X_MIN, window.map.dragLimits.Y_MAX, window.map.dragLimits.Y_MIN);
         setCoordinates(element, finalPosition[0], finalPosition[1]);
         window.form.assignAddress(finalPosition[0], finalPosition[1]);
       };

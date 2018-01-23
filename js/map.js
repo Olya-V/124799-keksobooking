@@ -3,11 +3,11 @@
 (function () {
   var elementToMove = window.pin.main;
   var movementArea = window.data.map;
-  var dragLimits = {
-    yMin: window.pin.limits.Y_MIN,
-    yMax: window.pin.limits.Y_MAX,
-    xMin: window.pin.parameters.WIDTH / 2,
-    xMax: elementToMove.parentNode.offsetWidth - window.pin.parameters.WIDTH / 2
+  var DragLimits = {
+    Y_MIN: window.pin.limits.Y_MIN,
+    Y_MAX: window.pin.limits.Y_MAX,
+    X_MIN: window.pin.parameters.WIDTH / 2,
+    X_MAX: elementToMove.parentNode.offsetWidth - window.pin.parameters.WIDTH / 2
   };
 
   /**
@@ -27,7 +27,7 @@
   window.utils.dragItem(elementToMove);
   window.map = {
     elementToMove: elementToMove,
-    dragLimits: dragLimits,
+    dragLimits: DragLimits,
     movementArea: movementArea,
     show: show
   };

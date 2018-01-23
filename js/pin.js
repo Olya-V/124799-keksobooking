@@ -1,15 +1,15 @@
 'use strict';
 
 (function () {
-  var PIN_MAIN = {
+  var PinMain = {
     HEIGHT: 87,
     WIDTH: 65
   };
-  var PIN_LIMITS = {
-    Y_MIN: 100 - PIN_MAIN.HEIGHT,
-    Y_MAX: 500 - PIN_MAIN.HEIGHT
+  var PinLimits = {
+    Y_MIN: 100 - PinMain.HEIGHT,
+    Y_MAX: 500 - PinMain.HEIGHT
   };
-  var PIN_TO_RENDER = 5;
+  var PINS_TO_RENDER = 5;
   var pinsBlock = document.querySelector('div.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
 
@@ -55,7 +55,7 @@
       window.showCard(offersElements[activate(evt)]);
     };
     var fragmentPins = document.createDocumentFragment();
-    for (var k = 0; k < offersElements.length && k < PIN_TO_RENDER; k++) {
+    for (var k = 0; k < offersElements.length && k < PINS_TO_RENDER; k++) {
       var newPin = create(offersElements[k]);
       newPin.setAttribute('data-id', k);
       newPin.addEventListener('click', pinClickHandler);
@@ -98,10 +98,10 @@
   window.backend.download(window.utils.successHandler, window.utils.errorHandler);
   pinMain.addEventListener('mouseup', MainPinClickHandler);
   window.pin = {
-    amount: PIN_TO_RENDER,
+    amount: PINS_TO_RENDER,
     main: pinMain,
-    parameters: PIN_MAIN,
-    limits: PIN_LIMITS,
+    parameters: PinMain,
+    limits: PinLimits,
     disable: disable,
     remove: remove,
     render: render

@@ -1,12 +1,17 @@
 'use strict';
 
 (function () {
-  var TITLE_MIN_LENGTH = 30;
-  var TITLE_MAX_LENGTH = 100;
-  var SHACK_MIN_PRICE = 0;
-  var APPARTMENT_MIN_PRICE = 1000;
-  var HOUSE_MIN_PRICE = 5000;
-  var PALACE_MIN_PRICE = 10000;
+  var TitleLength = {
+    MIN: 30,
+    MAX: 100
+  };
+
+  var MinPrice = {
+    SHACK: 0,
+    APPARTMENT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
+  };
 
   var form = document.querySelector('.notice__form');
   var fields = document.querySelectorAll('form.notice__form fieldset');
@@ -25,9 +30,9 @@
    */
   var validateTitle = function () {
     if (title.validity.valueMissing) {
-      title.setCustomValidity('Это обязательное поле. Введите от ' + TITLE_MIN_LENGTH + ' до ' + TITLE_MAX_LENGTH + ' символов.');
+      title.setCustomValidity('Это обязательное поле. Введите от ' + TitleLength.MIN + ' до ' + TitleLength.MAX + ' символов.');
     } else if (title.validity.tooShort) {
-      title.setCustomValidity('Минимальная длина — ' + TITLE_MIN_LENGTH + ' символов');
+      title.setCustomValidity('Минимальная длина — ' + TitleLength.MIN + ' символов');
     } else {
       title.setCustomValidity('');
     }
@@ -54,16 +59,16 @@
   var setPriceForSelectedType = function () {
     switch (apartmentType.options.selectedIndex) {
       case 0:
-        pricePerNight.setAttribute('min', APPARTMENT_MIN_PRICE);
+        pricePerNight.setAttribute('min', MinPrice.APPARTMENT);
         break;
       case 1:
-        pricePerNight.setAttribute('min', SHACK_MIN_PRICE);
+        pricePerNight.setAttribute('min', MinPrice.SHACK);
         break;
       case 2:
-        pricePerNight.setAttribute('min', HOUSE_MIN_PRICE);
+        pricePerNight.setAttribute('min', MinPrice.HOUSE);
         break;
       case 3:
-        pricePerNight.setAttribute('min', PALACE_MIN_PRICE);
+        pricePerNight.setAttribute('min', MinPrice.PALACE);
         break;
     }
   };
@@ -200,7 +205,7 @@
   rooms.addEventListener('change', setRoomsForSelectedType);
 
   window.synchronizeFields(checkinTime, checkoutTime, ['12:00', '13:00', '14:00'], ['12:00', '13:00', '14:00'], window.utils.syncValues);
-  window.synchronizeFields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [APPARTMENT_MIN_PRICE, SHACK_MIN_PRICE, HOUSE_MIN_PRICE, PALACE_MIN_PRICE], window.utils.syncValueWithMin);
+  window.synchronizeFields(apartmentType, pricePerNight, ['flat', 'bungalo', 'house', 'palace'], [MinPrice.APPARTMENT, MinPrice.SHACK, MinPrice.HOUSE, MinPrice.PALACE], window.utils.syncValueWithMin);
   window.form = {
     activate: activateForm,
     assignAddress: assignAddress

@@ -21,6 +21,20 @@
   };
 
   /**
+   * @description определяет тип жилья для карточки объявления
+   * @param {String} type тип жилья из данных с сервера
+   * @return {String} тип жилья для краточки
+   */
+  var getType = function (type) {
+    var housingType = {
+      'flat': 'Квартира',
+      'house': 'Дом',
+      'bungalo': 'Бунгало'
+    };
+    return housingType[type];
+  };
+
+  /**
    * @description отрисовывает новый DOM-элемен popup перед .map__filters-container
    * @param {object} offerObject объект обявление -  один элемент из массива объявлений @see offers
    * @return {*} fragment с карточкой объявления
@@ -36,7 +50,7 @@
     elementAd.querySelector('h3').textContent = offerObject.offer.title;
     elementAd.querySelector('small').textContent = offerObject.offer.address;
     elementAd.querySelector('.popup__price').textContent = offerObject.offer.price + ' ' + RUBLE + '/ночь';
-    elementAd.querySelector('h4').textContent = window.data.type[offerObject.offer.type];
+    elementAd.querySelector('h4').textContent = getType(offerObject.offer.type);
     elementAd.querySelector('p:nth-of-type(3)').textContent = offerObject.offer.rooms + ' комнат для ' + offerObject.offer.guests + ' гостей';
     elementAd.querySelector('p:nth-of-type(4)').textContent = 'Заезд после ' + offerObject.offer.checkin + ', выезд до ' + offerObject.offer.checkout;
     elementAd.querySelector('p:nth-of-type(5)').textContent = offerObject.offer.description;

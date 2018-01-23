@@ -5,7 +5,7 @@
   var STATUS_OK = 200;
 
   /**
-   * @description формируе запрос на сервер
+   * @description формируем запрос на сервер
    * @param {Function} onLoad
    * @param {Function} onError
    * @return {XMLHttpRequest}

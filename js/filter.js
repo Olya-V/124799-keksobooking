@@ -1,10 +1,10 @@
 'use strict';
 
-var FILTER_PRICE = {
-  lowTo: 10000,
-  middleFrom: 10000,
-  middleTo: 50000,
-  hightFrom: 50000
+var FilterPrice = {
+  LOW: 10000,
+  MIDDLE_START: 10000,
+  MIDDLE_END: 50000,
+  HIGHT: 50000
 };
 
 var housingType = document.querySelector('#housing-type');
@@ -12,17 +12,16 @@ var housingPrice = document.querySelector('#housing-price');
 var housingRooms = document.querySelector('#housing-rooms');
 var housingGuests = document.querySelector('#housing-guests');
 var housingFeatures = Array.from(document.querySelectorAll('#housing-features input'));
-var filters = {
-  type: 'any',
-  price: 'any',
-  rooms: 'any',
-  guests: 'any',
-  features: []
+var Filter = {
+  TYPE: 'any',
+  PRICE: 'any',
+  ROOMS: 'any',
+  GUESTS: 'any',
+  FEATURES: []
 };
 
-
 /**
- * @description фильтрует основной массив объявлений по критериям устгновленных фильтров
+ * @description фильтрует основной массив объявлений по критериям установленных фильтров
  * @param {Array} offersElements
  * @param {Array} filtersObject
  * @return {Array}
@@ -32,25 +31,25 @@ var filterOffers = function (offersElements, filtersObject) {
 
     var filteredByFeatures = true;
 
-    for (var i = 0; i < filtersObject.features.length; i++) {
-      if (item.offer.features.indexOf(filtersObject.features[i]) === -1) {
+    for (var i = 0; i < filtersObject.FEATURES.length; i++) {
+      if (item.offer.features.indexOf(filtersObject.FEATURES[i]) === -1) {
         filteredByFeatures = false;
         break;
       }
     }
     var filteredByPrice = (
-      (item.offer.price < FILTER_PRICE.lowTo && filtersObject.price === 'low') ||
-      (item.offer.price >= FILTER_PRICE.middleFrom && item.offer.price <= FILTER_PRICE.middleTo && filtersObject.price === 'middle') ||
-      (item.offer.price > FILTER_PRICE.hightFrom && filtersObject.price === 'high') || filtersObject.price === 'any');
+      (item.offer.price < FilterPrice.LOW && filtersObject.PRICE === 'low') ||
+      (item.offer.price >= FilterPrice.MIDDLE_START && item.offer.price <= FilterPrice.MIDDLE_END && filtersObject.PRICE === 'middle') ||
+      (item.offer.price > FilterPrice.HIGHT && filtersObject.PRICE === 'high') || filtersObject.PRICE === 'any');
 
 
-    return ((item.offer.type === filtersObject.type || filtersObject.type === 'any') &&
+    return ((item.offer.type === filtersObject.TYPE || filtersObject.TYPE === 'any') &&
       filteredByPrice &&
-      (item.offer.rooms.toString() === filtersObject.rooms || filtersObject.rooms === 'any') &&
-      (item.offer.guests.toString() === filtersObject.guests || filtersObject.guests === 'any') &&
+      (item.offer.rooms.toString() === filtersObject.ROOMS || filtersObject.ROOMS === 'any') &&
+      (item.offer.guests.toString() === filtersObject.GUESTS || filtersObject.GUESTS === 'any') &&
       filteredByFeatures);
   });
-  return newOffers.slice(0, window.pin.amount - 1);
+  return newOffers.slice(0, window.pin.amount);
 };
 
 /**
@@ -59,27 +58,27 @@ var filterOffers = function (offersElements, filtersObject) {
 var filtersChangeHandler = function () {
   window.card.remove();
   window.pin.remove();
-  var filteredOffers = filterOffers(window.data.offers, filters);
-  window.pin.render(filteredOffers);
+  var offers = filterOffers(window.data.offers, Filter);
+  window.pin.render(offers);
 };
 
 housingType.addEventListener('change', function () {
-  filters.type = housingType.value;
+  Filter.TYPE = housingType.value;
   window.debounce(filtersChangeHandler);
 });
 
 housingPrice.addEventListener('change', function () {
-  filters.price = housingPrice.value;
+  Filter.PRICE = housingPrice.value;
   window.debounce(filtersChangeHandler);
 });
 
 housingRooms.addEventListener('change', function () {
-  filters.rooms = housingRooms.value;
+  Filter.ROOMS = housingRooms.value;
   window.debounce(filtersChangeHandler);
 });
 
 housingGuests.addEventListener('change', function () {
-  filters.guests = housingGuests.value;
+  Filter.GUESTS = housingGuests.value;
   window.debounce(filtersChangeHandler);
 });
 
@@ -98,7 +97,7 @@ var selectFeatures = function () {
 
 housingFeatures.forEach(function (value) {
   value.addEventListener('change', function () {
-    filters.features = selectFeatures();
+    Filter.FEATURES = selectFeatures();
     window.debounce(filtersChangeHandler);
   });
 });
