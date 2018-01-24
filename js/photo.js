@@ -6,6 +6,8 @@
   var chooserContainter = document.querySelector('.form__photo-container .upload');
   var chooser = document.querySelector('#images');
 
+  var dropzoneLabel = document.querySelector('.form__photo-container .drop-zone');
+
   chooser.setAttribute('multiple', 'true');
   chooserContainter.style.width = '140px';
   chooserContainter.style.marginBottom = '3px';
@@ -29,12 +31,16 @@
     preview.style.borderRadius = '3px';
   };
 
-  /**
-   * @description обработчик загрузки фоторграфий в форме подачи объявления
-   * @param {Object} evt
-   */
-  var photoSelectHandler = function (evt) {
-    var files = evt.target.files;
+  var uploadPhoto = function (evt) {
+    var files;
+
+    if (evt.dataTransfer) {
+      console.log('dataTransfer ' + evt);
+      files = evt.dataTransfer.files;
+    } else {
+      console.log(evt);
+      files = evt.target.files;
+    }
 
     for (var j = 0; j < files.length; j++) {
       var name = files[j].name.toLowerCase();
@@ -43,6 +49,41 @@
       }
     }
   };
+
+  /**
+   * @description обработчик загрузки фоторграфий в форме подачи объявления
+   * @param {Object} evt
+   */
+  var photoSelectHandler = function (evt) {
+    uploadPhoto(evt);
+  };
+
+  var photoDragoverHandler = function (evt) {
+    console.log('gradover ' + evt);
+    evt.preventDefault();
+    evt.stopPropagation(); // prevent bubbling up to the DOM tree - dragover evt will not be triggred on the parents
+    dropzoneLabel.style.backgroundColor = 'lightblue';
+  };
+
+  var photoDragleaveHandler = function (evt) {
+    console.log('drag leave ' + evt);
+    evt.preventDefault();
+    evt.stopPropagation();
+    dropzoneLabel.style.backgroundColor = '#f0f0ea';
+  };
+
+  var photoDropHandler = function (evt) {
+    console.log('drop');
+    evt.preventDefault();
+    evt.stopPropagation();
+    dropzoneLabel.style.backgroundColor = '#f0f0ea';
+    uploadPhoto(evt);
+  };
+
+  chooser.addEventListener('change', photoSelectHandler);
+  dropzoneLabel.addEventListener('dragover', photoDragoverHandler);
+  dropzoneLabel.addEventListener('dragleave', photoDragleaveHandler);
+  dropzoneLabel.addEventListener('drop', photoDropHandler);
 
   chooser.addEventListener('change', photoSelectHandler);
 })();
