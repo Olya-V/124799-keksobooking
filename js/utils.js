@@ -121,27 +121,77 @@
     node.appendChild(message);
   };
 
-  /**
-   * @description проверяет параметр загружаемого файла
-   * @param {String} filename
-   * @param {Array } types массив разрешенных форматов
-   * @return {boolean}
-   */
-  var checkFileFormat = function (filename, types) {
-    return types.some(function (format) {
-      return filename.endsWith(format);
-    });
+
+  var uploadMiltipleFiles = function (evt) {
+    var files;
+
+    if (evt.dataTransfer) {
+      files = evt.dataTransfer.files;
+    } else {
+      files = evt.target.files;
+    }
+    return files;
   };
 
   /**
-   * @description загружает несколько файлов
-   * @param {*} file элемент массива c файлами
-   * @param {Function} renderFile функция отрисовки файлов
+   * @description проверяет формат загружаемого файла
+   * @param {String} file
+   * @param {Array } types массив разрешенных форматов
+   * @return {boolean}
    */
-  var loadMultipleFiles = function (file, renderFile) {
-    var reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.addEventListener('load', renderFile);
+  var checkFileFormat = function (file, types) {
+    var fileName = file.name.toLowerCase();
+
+    return types.some(function (format) {
+      return fileName.endsWith(format);
+    });
+  };
+
+
+  var renderMultipleFiles = function (evt, renderFile) {
+    var files = uploadMiltipleFiles(evt);
+
+    for (var j = 0; j < files.length; j++) {
+      if (checkFileFormat(files[j], window.data.fileType)) {
+        var reader = new FileReader();
+        reader.readAsDataURL(files[j]);
+        reader.addEventListener('load', renderFile);
+      }
+    }
+  };
+
+  var makeDroppableForMultipleFiles = function (input, element, renderFile) {
+    var selectHandler = function (evt) {
+      console.log('change');
+      renderMultipleFiles(evt, renderFile);
+    };
+
+    var dragoverHandler = function (evt) {
+      console.log('drag over');
+      evt.preventDefault();
+      evt.stopPropagation();
+      element.style.backgroundColor = 'lightblue';
+    };
+
+    var dragleaveHandler = function (evt) {
+      console.log('drag leave');
+      evt.preventDefault();
+      evt.stopPropagation();
+      element.style.backgroundColor = '#f0f0ea';
+    };
+
+    var dropHandler = function (evt) {
+      console.log('drop');
+      evt.preventDefault();
+      evt.stopPropagation();
+      element.style.backgroundColor = '#f0f0ea';
+      renderMultipleFiles(evt, renderFile);
+    };
+
+    input.addEventListener('change', selectHandler);
+    element.addEventListener('dragover', dragoverHandler);
+    element.addEventListener('dragleave', dragleaveHandler);
+    element.addEventListener('drop', dropHandler);
   };
 
   window.utils = {
@@ -151,6 +201,7 @@
     successHandler: successHandler,
     errorHandler: errorHandler,
     checkFileFormat: checkFileFormat,
-    loadMultipleFiles: loadMultipleFiles
+    renderMultipleFiles: renderMultipleFiles,
+    makeDroppableForMultipleFiles: makeDroppableForMultipleFiles
   };
 })();

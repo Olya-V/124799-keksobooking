@@ -9,13 +9,15 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
+  var FILE_TYPE = ['gif', 'jpg', 'jpeg', 'png'];
   var offers = [];
   window.data = {
     photoContainer: photoContainer,
     avatar: avatar,
     map: map,
     housingType: housingType,
-    offers: offers
+    offers: offers,
+    fileType: FILE_TYPE
   };
 })();
 

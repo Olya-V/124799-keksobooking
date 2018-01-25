@@ -1,66 +1,86 @@
 'use strict';
 
 (function () {
-  var TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-
-  var chooser = document.querySelector('#avatar');
+  var input = document.querySelector('#avatar');
 
   var dropzoneLabel = document.querySelector('.notice__photo .drop-zone');
-  /**
-   * @description обработчик загрузки аватарки
-   * @param {Object} evt
-   */
-  var avatarUpload = function (evt) {
+
+  var uploadSingleFile = function (evt) {
     var file;
 
     if (evt.dataTransfer) {
-      console.log('dataTransfer ' + evt);
       file = evt.dataTransfer.files[0];
     } else {
-      console.log(evt);
       file = evt.target.files[0];
     }
-    var name = file.name.toLowerCase();
 
-    if (window.utils.checkFileFormat(name, TYPES)) {
+    return file;
+  };
+
+
+  var renderSingleFile = function (evt) {
+    var file = uploadSingleFile(evt);
+
+    if (!file) {
+      return;
+    }
+    console.log(evt);
+    console.log(file);
+    if (window.utils.checkFileFormat(file, window.data.fileType)) {
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
         window.data.avatar.src = reader.result;
+        window.data.avatar.setAttribute('graggable', true);
       });
     }
     reader.readAsDataURL(file);
   };
 
-  var avatarSelectHandler = function (evt) {
+  var selectHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
     console.log('change');
-    avatarUpload(evt);
+    renderSingleFile(evt);
   };
 
-  var avatarDragoverHandler = function (evt) {
-    console.log('gradover ' + evt);
+  var dragoverHandler = function (evt) {
+    console.log('drag over');
     evt.preventDefault();
-    evt.stopPropagation(); // prevent bubbling up to the DOM tree - dragover evt will not be triggred on the parents
+    evt.stopPropagation();
     dropzoneLabel.style.backgroundColor = 'lightblue';
   };
 
-  var avatarDragleaveHandler = function (evt) {
-    console.log('drag leave ' + evt);
+  var dragleaveHandler = function (evt) {
+    console.log('drag leave');
     evt.preventDefault();
     evt.stopPropagation();
     dropzoneLabel.style.backgroundColor = '#f0f0ea';
   };
 
-  var avatarDropHandler = function (evt) {
+  var dropHandler = function (evt) {
     console.log('drop');
     evt.preventDefault();
     evt.stopPropagation();
     dropzoneLabel.style.backgroundColor = '#f0f0ea';
-    avatarUpload(evt);
+    renderSingleFile(evt);
   };
 
-  chooser.addEventListener('change', avatarSelectHandler);
-  dropzoneLabel.addEventListener('dragover', avatarDragoverHandler);
-  dropzoneLabel.addEventListener('dragleave', avatarDragleaveHandler);
-  dropzoneLabel.addEventListener('drop', avatarDropHandler);
+  var dragstartHandler = function () {
+    console.log('drag start');
+
+    window.data.avatar.addEventListener('dragend', function (evt) {
+      console.log('drag end');
+      console.log(evt);
+      window.data.avatar.src = 'img/muffin.png';
+
+    });
+  };
+
+  input.addEventListener('change', selectHandler);
+  dropzoneLabel.addEventListener('dragover', dragoverHandler);
+  dropzoneLabel.addEventListener('dragleave', dragleaveHandler);
+  dropzoneLabel.addEventListener('drop', dropHandler);
+  window.data.avatar.addEventListener('dragstart', dragstartHandler);
+
 })();
