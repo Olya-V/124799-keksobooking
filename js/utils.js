@@ -121,18 +121,6 @@
     node.appendChild(message);
   };
 
-
-  var uploadMiltipleFiles = function (evt) {
-    var files;
-
-    if (evt.dataTransfer) {
-      files = evt.dataTransfer.files;
-    } else {
-      files = evt.target.files;
-    }
-    return files;
-  };
-
   /**
    * @description проверяет формат загружаемого файла
    * @param {String} file
@@ -147,51 +135,8 @@
     });
   };
 
-
-  var renderMultipleFiles = function (evt, renderFile) {
-    var files = uploadMiltipleFiles(evt);
-
-    for (var j = 0; j < files.length; j++) {
-      if (checkFileFormat(files[j], window.data.fileType)) {
-        var reader = new FileReader();
-        reader.readAsDataURL(files[j]);
-        reader.addEventListener('load', renderFile);
-      }
-    }
-  };
-
-  var makeDroppableForMultipleFiles = function (input, element, renderFile) {
-    var selectHandler = function (evt) {
-      console.log('change');
-      renderMultipleFiles(evt, renderFile);
-    };
-
-    var dragoverHandler = function (evt) {
-      console.log('drag over');
-      evt.preventDefault();
-      evt.stopPropagation();
-      element.style.backgroundColor = 'lightblue';
-    };
-
-    var dragleaveHandler = function (evt) {
-      console.log('drag leave');
-      evt.preventDefault();
-      evt.stopPropagation();
-      element.style.backgroundColor = '#f0f0ea';
-    };
-
-    var dropHandler = function (evt) {
-      console.log('drop');
-      evt.preventDefault();
-      evt.stopPropagation();
-      element.style.backgroundColor = '#f0f0ea';
-      renderMultipleFiles(evt, renderFile);
-    };
-
-    input.addEventListener('change', selectHandler);
-    element.addEventListener('dragover', dragoverHandler);
-    element.addEventListener('dragleave', dragleaveHandler);
-    element.addEventListener('drop', dropHandler);
+  var setMultipleLoad = function (element) {
+    element.setAttribute('multiple', true);
   };
 
   window.utils = {
@@ -201,7 +146,6 @@
     successHandler: successHandler,
     errorHandler: errorHandler,
     checkFileFormat: checkFileFormat,
-    renderMultipleFiles: renderMultipleFiles,
-    makeDroppableForMultipleFiles: makeDroppableForMultipleFiles
+    setMultipleLoad: setMultipleLoad
   };
 })();

@@ -2,7 +2,6 @@
 
 (function () {
   var input = document.querySelector('#avatar');
-
   var dropzoneLabel = document.querySelector('.notice__photo .drop-zone');
 
   var uploadSingleFile = function (evt) {
@@ -51,11 +50,19 @@
     dropzoneLabel.style.backgroundColor = 'lightblue';
   };
 
+  var fileDropDocumentHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    dropzoneLabel.style.backgroundColor = '#f0f0ea';
+  };
+
   var dragleaveHandler = function (evt) {
     console.log('drag leave');
     evt.preventDefault();
     evt.stopPropagation();
-    dropzoneLabel.style.backgroundColor = '#f0f0ea';
+    dropzoneLabel.style.backgroundColor = '#ff8972';
+
+    document.addEventListener('drop', fileDropDocumentHandler);
   };
 
   var dropHandler = function (evt) {
@@ -66,14 +73,14 @@
     renderSingleFile(evt);
   };
 
-  var dragstartHandler = function () {
+  var dragstartHandler = function (evt) {
     console.log('drag start');
+    console.log(evt);
 
-    window.data.avatar.addEventListener('dragend', function (evt) {
+    window.data.avatar.addEventListener('dragend', function () {
       console.log('drag end');
-      console.log(evt);
       window.data.avatar.src = 'img/muffin.png';
-
+      dropzoneLabel.style.backgroundColor = '#f0f0ea';
     });
   };
 

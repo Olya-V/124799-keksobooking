@@ -1,36 +1,142 @@
 'use strict';
 
 (function () {
-  var chooserContainter = document.querySelector('.form__photo-container .upload');
-  var chooser = document.querySelector('#images');
+  // О Т Р И С О В К А    Ф О Т О    Я Ч Е Е К
+  var photoContainer = document.querySelector('.form__photo-container');
+  var dropZone = photoContainer.querySelector('.drop-zone');
+  var cellsAmount = 8;
 
-  var dropzoneLabel = document.querySelector('.form__photo-container .drop-zone');
-
-  chooser.setAttribute('multiple', 'true');
-  chooserContainter.style.width = '140px';
-  chooserContainter.style.marginBottom = '3px';
-  window.data.photoContainer.style.width = '460px';
-  window.data.photoContainer.style.display = 'flex';
-  window.data.photoContainer.style.flexWrap = 'wrap';
-  window.data.photoContainer.style.listStyle = 'none';
-
-  /**
-   * @description отображает загруженное фото
-   * @param {Object} uploadEvt
-   */
-  var setPhoto = function (uploadEvt) {
-    var preview = window.data.photoContainer.insertAdjacentElement('beforeend', document.createElement('IMG'));
-    preview.src = uploadEvt.target.result;
-    preview.style.width = '80px';
-    preview.style.height = '70px';
-    preview.style.marginLeft = '10px';
-    preview.style.marginRight = '10px';
-    preview.style.marginBottom = '10px';
-    preview.style.borderRadius = '3px';
+  var stylePhotoContainer = function () {
+    photoContainer.style.width = '100%';
+    photoContainer.style.display = 'flex';
+    photoContainer.style.flexWrap = 'wrap';
+    photoContainer.style.justifyContent = 'space-between';
+    dropZone.style.width = '140px';
+    dropZone.style.marginBottom = '5px';
   };
 
-  window.utils.makeDroppableForMultipleFiles(chooser, dropzoneLabel, setPhoto);
+  var createPhotoCells = function () {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < cellsAmount; i++) {
+      var cell = document.createElement('div');
+      cell.style.width = '140px';
+      cell.style.minHeight = '70px';
+      cell.style.marginBottom = '5px';
+      cell.style.backgroundColor = '#c7c7c7';
+      cell.classList.add('form__photo-cell');
+      cell.setAttribute('dropzone', 'move');
+
+      var photo = document.createElement('img');
+      photo.style.width = '140px';
+      photo.style.height = '68px';
+      cell.appendChild(photo);
+      fragment.appendChild(cell);
+    }
+    photoContainer.appendChild(fragment);
+  };
+
+  var renderPhotoCells = function () {
+    stylePhotoContainer();
+    createPhotoCells();
+  };
+
+  renderPhotoCells();
+
+  // З А Г Р У З К А    Ф А Й Л О В   R E A D E R
+
+  var findEmptyCell = function () {
+    var cells = Array.from(document.querySelectorAll('.form__photo-cell img'));
+
+    var emptyCell = cells.find(function (element) {
+      return element.src === '';
+    });
+
+    return emptyCell;
+  };
+
+  var input = document.querySelector('#images');
+  window.utils.setMultipleLoad(input);
+
+  var readerLoadHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    var emptyCell = findEmptyCell();
+
+    if (!emptyCell) {
+      return;
+    }
+
+    emptyCell.src = evt.target.result;
+  };
+
+  var inputChangeHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    console.log('change');
+
+    var files = evt.target.files;
+
+    for (var i = 0; i < files.length && i < cellsAmount; i++) {
+
+      var isFormatMatched = window.utils.checkFileFormat(files[i], window.data.fileType);
+
+      if (isFormatMatched) {
+        var reader = new FileReader();
+        reader.addEventListener('load', readerLoadHandler);
+      }
+      reader.readAsDataURL(files[i]);
+    }
+
+  };
+
+  input.addEventListener('change', inputChangeHandler);
 
 
-  // С О Р Т И Р О В К А
+  // З А Г Р У З К А    Ф А Й Л О В   D R A G   A N D  D R O P
+
+  var fileDropHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    var files = evt.dataTransfer.files;
+
+    for (var i = 0; i < files.length; i++) {
+      var isFormatMatched = window.utils.checkFileFormat(files[i], window.data.fileType);
+
+      if (isFormatMatched) {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(files[i]);
+
+
+        reader.addEventListener('load', readerLoadHandler);
+      }
+    }
+    dropZone.style.backgroundColor = '#f0f0ea';
+  };
+
+  var fileDraoverHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    dropZone.style.backgroundColor = 'lightblue';
+  };
+
+  var fileDropDocumentHandler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    dropZone.style.backgroundColor = '#f0f0ea';
+  };
+
+  var fileDragleavehanler = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    dropZone.style.backgroundColor = '#ff8972';
+
+    document.addEventListener('drop', fileDropDocumentHandler);
+
+  };
+
+  dropZone.addEventListener('dragover', fileDraoverHandler);
+  dropZone.addEventListener('drop', fileDropHandler);
+  dropZone.addEventListener('dragleave', fileDragleavehanler);
 })();
